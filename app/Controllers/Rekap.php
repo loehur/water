@@ -79,21 +79,17 @@ class Rekap extends Controller
 
       //STATISTIC
       $total_jual = [];
-      $data_ref[0] = $this->db($this->book)->get_where('ref', "tgL LIKE '" . $today . "%' AND mode = 0", 'id');
-      $data_ref[1] = $this->db($this->book)->get_where('ref', "tgL LIKE '" . $today . "%' AND mode = 1", 'id');
+      $data_ref = $this->db($this->book)->get_where('ref', "tgL LIKE '" . $today . "%'", 'id');
 
       $cols = "SUM((harga * qty) - diskon) as total";
-      for ($i = 0; $i <= 1; $i++) {
-         $refs[$i] = "";
-         if (count($data_ref[$i]) > 0) {
-            foreach ($data_ref[$i] as $key => $d) {
-               $refs[$i] .= $key . ",";
-            }
-            $refs[$i] = rtrim($refs[$i], ',');
-            $where = "ref IN (" . $refs[$i] . ")";
-            $total_jual[$i] = $this->db($this->book)->get_cols_where('pesanan', $cols, $where, 0)['total'];
-         }
+
+      $refs = "";
+      foreach ($data_ref as $key => $d) {
+         $refs .= $key . ",";
       }
+      $refs = rtrim($refs, ',');
+      $where = "ref IN (" . $refs . ")";
+      $total_jual = $this->db($this->book)->get_cols_where('pesanan', $cols, $where, 0)['total'];
 
       //PENDAPATAN
       $cols = "sum(jumlah) as total";

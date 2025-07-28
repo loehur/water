@@ -177,19 +177,14 @@ $target_page_rekap = $uri_segments[$uriCount - 1];
             </tr>
           </thead>
           <tbody>
-            <?php
-            $total_tj = 0;
-            foreach ($data['total_jual'] as $key => $tj) {
-              $total_tj += $tj ?>
-              <tr>
-                <td><?= $key == 0 ? "Dine-In" : "Take-Away" ?></td>
-                <td class="text-end"><?= number_format($tj) ?></td>
-              </tr>
-            <?php } ?>
+            <tr>
+              <td>Penjualan</td>
+              <td class="text-end"><?= number_format($data['total_jual']) ?></td>
+            </tr>
 
             <tr class="table-success">
               <td><b>Total Penjualan</b></td>
-              <td class="text-right"><b>Rp<?= number_format($total_tj) ?></b></td>
+              <td class="text-right"><b>Rp<?= number_format($data['total_jual']) ?></b></td>
             </tr>
           </tbody>
         </table>

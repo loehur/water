@@ -5,7 +5,12 @@ $total = 0;
 foreach ($data['order'] as $dk) {
   $subTotal = ($dk['harga'] * $dk['qty']) - $dk['diskon'];
   $total += $subTotal;
-} ?>
+}
+
+foreach ($data['bayar'] as $b) {
+  $total -= $b['jumlah'];
+}
+?>
 
 <div class="w-100 mt-5">
   <div class="text-center">Total</div>
@@ -27,7 +32,7 @@ foreach ($data['order'] as $dk) {
     $.ajax({
       url: "<?= URL::BASE_URL ?>Penjualan/piutang",
       data: {
-        id: '<?= $data['ref']['id'] ?>',
+        id: '<?= $data['ref'] ?>',
       },
       type: "POST",
       success: function(res) {

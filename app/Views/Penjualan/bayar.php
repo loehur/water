@@ -3,7 +3,13 @@ $total = 0;
 foreach ($data['order'] as $dk) {
   $subTotal = ($dk['harga'] * $dk['qty']) - $dk['diskon'];
   $total += $subTotal;
-} ?>
+}
+
+foreach ($data['bayar'] as $b) {
+  $total -= $b['jumlah'];
+}
+
+?>
 
 <div x-data="data">
   <div class="w-100 mt-2">
@@ -93,7 +99,7 @@ foreach ($data['order'] as $dk) {
         $.ajax({
           url: "<?= URL::BASE_URL ?>Penjualan/bayar",
           data: {
-            nomor: <?= $data['nomor'] ?>,
+            ref: '<?= $data['ref'] ?>',
             dibayar: this.total_bayar,
             metode: metode
           },

@@ -12,7 +12,7 @@ $menu[0] = [
         'c' => 'Stok',
         'title' => 'Stok',
         'icon' => 'fas fa-vote-yea',
-        'txt' => 'Laporan Stok',
+        'txt' => 'Sales',
     ],
     [
         'p' => 0,

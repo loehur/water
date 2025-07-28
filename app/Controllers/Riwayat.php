@@ -11,7 +11,7 @@ class Riwayat extends Controller
    public function index()
    {
       $layout = ['title' => 'Riwayat Pesanan'];
-      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 ORDER BY id DESC LIMIT 100", 'id');
+      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d") . "' ORDER BY id DESC", 'id');
 
       $order = [];
       $total = [];
@@ -24,6 +24,7 @@ class Riwayat extends Controller
          }
       }
 
+      $data['pelanggan'] = $this->db(0)->get_where('pelanggan', "id_cabang = '" . $this->id_cabang . "'", 'id');
       $data['order'] = $order;
       $data['total'] = $total;
 

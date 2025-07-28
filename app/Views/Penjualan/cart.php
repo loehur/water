@@ -9,11 +9,11 @@
   $id_pelanggan = 0;
 } ?>
 
-<table class="table table-sm mx-0">
+<table class="table table-sm mx-0 mt-2">
   <thead style="cursor: pointer;" id="pesan">
     <tr>
       <th class="text-purple border-top-0">Pesanan (+)</th>
-      <th class="text-end border-top-0">Total</th>
+      <th class="text-end border-top-0"></th>
     </tr>
   </thead>
 
@@ -69,26 +69,26 @@
 </table>
 
 <?php if ($id_pelanggan == 0) { ?>
-  <?php if ($total > 0) { ?>
-    <div class="row mx-0">
-      <div class="col mt-auto">
+  <?php if (count($data['order']) > 0) { ?>
+    <div class="row mx-0 mt-0">
+      <div class="col px-0 mt-auto pb-0">
         <div>Pilih Pelanggan</div>
         <select name="pelanggan" class="tize" required>
           <option selected value="">-</option>
           <?php foreach ($data['pelanggan'] as $p) { ?>
-            <option value="<?= $p['id'] ?>"><?= $p['nama'] ?></option>
+            <option value="<?= $p['id'] ?>"><?= strtoupper($p['nama']) ?> #<?= $p['titip'] ?> | <?= $p['hp'] ?></option>
           <?php } ?>
         </select>
       </div>
-      <div class="col-auto">
-        <div class="mt-3 text-center">Galon Titip</div>
+      <div class="col-auto pe-0">
+        <div class="text-center">Galon Titip</div>
         <div class="mt-1 text-center">
           <input class="form-control text-center" style="width: 80px;" type="number" value="<?= $qty ?>" name="qty_titip">
         </div>
       </div>
     </div>
     <div class="row mx-0 mt-2">
-      <div class="col">
+      <div class="col text-end px-0">
         <div class="mt-1"><button class="btn btn-success w-100" onclick="tetapkan()">Tetapkan</button></div>
       </div>
     </div>
@@ -97,8 +97,8 @@
   <div class="px-1 w-100">
     <table class="table table-sm">
       <tr>
-        <td class=""><span class="text-purple">Pelanggan:</span> <span class="fw-bold"><?= $data['pelanggan'][$data['ref']['pelanggan']]['nama'] ?></span></td>
-        <td class="text-end"><span class="text-purple">Galon Titip:</span> <span class="fw-bold"><?= $data['pelanggan'][$data['ref']['pelanggan']]['titip'] ?></span></td>
+        <td class=""><span class="text-purple">Pelanggan:</span> <span class="fw-bold text-danger"><?= strtoupper($data['pelanggan'][$data['ref']['pelanggan']]['nama']) ?></span></td>
+        <td class="text-end"><span class="text-purple">Galon Titip:</span> <span class="fw-bold text-danger"><?= $data['pelanggan'][$data['ref']['pelanggan']]['titip'] ?></span></td>
       </tr>
     </table>
   </div>
@@ -106,8 +106,8 @@
 
 <?php if ($total > 0 && $data['ref']['pelanggan'] <> 0) { ?>
   <div class="d-flex flex-row justify-content-between px-1 mt-3">
-    <div class="piutang" onclick="load_piutang(<?= $data['nomor'] ?>)"><button class="btn btn-outline-danger">Jadikan Piutang</button></div>
-    <div class="bayar" onclick="load_bayar(<?= $data['nomor'] ?>)"><button class="btn btn-outline-success">Pembayaran</button></div>
+    <div class="piutang" onclick="load_piutang('<?= $data['ref']['id'] ?>')"><button class="btn btn-outline-danger">Jadikan Piutang</button></div>
+    <div class="bayar" onclick="load_bayar('<?= $data['ref']['id'] ?>')"><button class="btn btn-outline-success">Pembayaran</button></div>
   </div>
 <?php } ?>
 <div class="pb-5"></div>

@@ -1,13 +1,13 @@
-<div class="row p-1 m-1 border rounded bg-white">
+<div class="row p-1 m-1">
   <div class="col pr-0 pl-0">
     <div class="p-1">
       <form action="<?= URL::BASE_URL; ?>Pelanggan/insert" method="POST">
         <div class="row">
           <div class="col">
-            <input type="text" id="search" name="f1" class="form-control form-control-sm" placeholder="Nama Pelanggan" required>
+            <input type="text" id="search" name="f1" class="form-control" placeholder="Nama Pelanggan" required>
           </div>
           <div class="col">
-            <input type="text" id="no_hp" name="f2" class="form-control form-control-sm" placeholder="Nomor HP" required>
+            <input type="text" id="no_hp" name="f2" class="form-control" placeholder="Nomor HP" required>
           </div>
         </div>
         <div class="row mt-2">
@@ -17,7 +17,7 @@
         </div>
       </form>
     </div>
-    <div class="p-1 mb-1" style="height: 400px; overflow-y:scroll">
+    <div class="p-1 mb-1" style="height: 500px; overflow-y:scroll">
       <table id="pelanggan" class="table table-sm w-100">
         <tbody>
           <?php

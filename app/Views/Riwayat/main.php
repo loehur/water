@@ -2,9 +2,8 @@
 foreach ($data['ref'] as $key => $r) { ?>
   <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
     <div class="col">
-      <b><?= $r['id'] ?></b><br>
-      No. <?= $r['nomor'] ?><br>
-      <?= $r['mode'] == 0 ? "<span class='badge bg-success bg-gradient'>Dine-In</span>" : "<span class='badge bg-primary bg-gradient'>Take-Away</span>" ?></span>
+      #<?= $r['id'] ?><br>
+      <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b>
     </div>
     <div class="col text-end">
       <?= date('d M y, H:i', strtotime($r['tgl'] . " " . $r['jam'] . ":00")) ?><br>

@@ -1,9 +1,7 @@
 <?php
-$no = 14;
+$no = 7;
 ?>
 
-
-<label class="px-1 text-purple">Data Pesanan</label><br>
 <div class="row mx-0" style="max-width: <?= URL::MAX_WIDTH ?>px;">
   <?php for ($i = 1; $i <= $no; $i++) { ?>
     <div class="col py-1 px-1">
@@ -14,9 +12,9 @@ $no = 14;
   <?php } ?>
 </div>
 
-<div class="row mx-0 mt-2">
+<div class="row mx-0">
   <div class="col px-1">
-    <div class="px-0" id="cart_load" style="height: 10px;"></div>
+    <div class="px-0 mt-2" id="cart_load" style="height: 5px;"></div>
     <div id="cart"></div>
   </div>
 </div>
@@ -181,15 +179,15 @@ $no = 14;
 
   }
 
-  function load_bayar(nomor) {
+  function load_bayar(ref) {
     $("div#bayar").load('<?= URL::BASE_URL ?>Load/spinner/2', function() {
-      $("div#bayar").load('<?= URL::BASE_URL ?>Penjualan/cek_bayar/' + nomor);
+      $("div#bayar").load('<?= URL::BASE_URL ?>Penjualan/cek_bayar/' + ref);
     });
   }
 
-  function load_piutang(nomor) {
+  function load_piutang(ref) {
     $("div#piutang").load('<?= URL::BASE_URL ?>Load/spinner/2', function() {
-      $("div#piutang").load('<?= URL::BASE_URL ?>Penjualan/cek_piutang/' + nomor);
+      $("div#piutang").load('<?= URL::BASE_URL ?>Penjualan/cek_piutang/' + ref);
     });
   }
 

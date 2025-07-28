@@ -322,6 +322,7 @@ class Login extends Controller
       $_SESSION[URL::SESSID]['log_mode'] = 0;
       $data_user = $this->dataSynchrone($id);
       $this->save_cookie($data_user);
+      session_destroy();
    }
 
    public function log_mode()

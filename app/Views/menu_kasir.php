@@ -1,7 +1,7 @@
 <?php
 $menu[0] = [
     [
-        'p' => 30,
+        'p' => 0,
         'c' => 'Penjualan',
         'title' => 'Buka Order',
         'icon' => 'fas fa-cash-register',
@@ -22,14 +22,14 @@ $menu[0] = [
         'txt' => 'Riwayat Pesanan',
     ],
     [
-        'p' => 30,
+        'p' => 0,
         'c' => 'Piutang',
         'title' => 'Piutang',
         'icon' => 'fas fa-file-invoice',
         'txt' => 'Piutang',
     ],
     [
-        'p' => 30,
+        'p' => 0,
         'c' => 'Kas',
         'title' => 'Kas',
         'icon' => 'fas fa-wallet',
@@ -43,7 +43,7 @@ $menu[0] = [
         'txt' => 'Absen'
     ],
     [
-        'p' => 30,
+        'p' => 0,
         'c' => 'Pelanggan',
         'title' => 'Pelanggan',
         'icon' => 'fas fa-address-book',

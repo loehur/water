@@ -1,0 +1,292 @@
+<?php
+
+class Penjualan extends Controller
+{
+   public function __construct()
+   {
+      $this->session_cek();
+      $this->operating_data();
+   }
+
+   public function index()
+   {
+      $layout = ['title' => 'Buka Order'];
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      $data['kat'] =  $_SESSION[URL::SESSID]['kat'];
+      $data['order'] = $this->db($this->book)->get_where('ref', "step = 0 AND id_user = " . $id_user, "nomor");
+      $this->view('layout', $layout);
+      $this->view(__CLASS__ . "/main", $data);
+   }
+
+   public function cart($nomor = 0)
+   {
+      $viewData = __CLASS__ . '/cart';
+      $data['nomor'] = $nomor;
+      $data['pelanggan'] = $this->db(0)->get("pelanggan", 'id');
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+
+      $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $data['menu'] = $_SESSION[URL::SESSID]['menu'];
+         $data['order'] = $this->db($this->book)->get_where('pesanan', "ref = '" . $cek['id'] . "'", "id_menu");
+         $data['bayar'] = $this->db($this->book)->get_where('kas', "ref = '" . $cek['id'] . "' AND status_mutasi <> 2");
+      } else {
+         $data['order'] = [];
+         $data['bayar'] = [];
+      }
+
+      $data['ref'] = $cek;
+
+      $this->view($viewData, $data);
+   }
+
+   function tetapkan_pelanggan()
+   {
+      $p = $_POST;
+      $id = $p['id'];
+      $pelanggan = $p['pelanggan'];
+      $qty = $p['qty'];
+
+      if ($pelanggan <= 0) {
+         echo "Pelanggan tidak ditemukan";
+         exit();
+      }
+
+      $update = $this->db($this->book)->update('ref', "pelanggan = " . $pelanggan, "id = '" . $id . "'");
+
+      if ($update['errno'] == 0) {
+         $up = $this->db(0)->update('pelanggan', "titip = " . $qty . ", last_order = '" . date('Y-m-d') . "'", "id = " . $pelanggan);
+         echo $up['errno'] == 0 ? 0 : $up['error'];
+      } else {
+         echo $update['error'];
+      }
+   }
+
+   public function menu($id_kat = 0, $nomor = 0)
+   {
+      $viewData = __CLASS__ . '/menu';
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      if ($id_kat == 0) {
+         $data['menu'] = $_SESSION[URL::SESSID]['menu'];
+      } else {
+         $menu_byKat =  $_SESSION[URL::SESSID]['menu_byKat'];
+         $data['menu'] = isset($menu_byKat[$id_kat]) ? $menu_byKat[$id_kat] : [];
+      }
+
+      $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $data['order'] = $this->db($this->book)->get_where('pesanan', "ref = '" . $cek['id'] . "'", "id_menu");
+      } else {
+         $data['order'] = [];
+      }
+
+      $this->view($viewData, $data);
+   }
+
+   public function ubah($nomor = 0)
+   {
+      $viewData = __CLASS__ . '/ubah';
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      $data['menu'] = $this->db(0)->get_where('menu_item', $this->wCabang . " ORDER BY freq DESC", 'id');
+
+      $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $data['order'] = $this->db($this->book)->get_where('pesanan', "ref = '" . $cek['id'] . "'", "id_menu");
+      } else {
+         $data['order'] = [];
+      }
+
+      $this->view($viewData, $data);
+   }
+
+   public function bayar()
+   {
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      $nomor = $_POST['nomor'];
+      $uang_diterima = $_POST['dibayar'];
+      $metode = $_POST['metode'];
+
+      if ($metode == 1) {
+         $st_mutasi = 1;
+         $step = 1;
+      } else {
+         $st_mutasi = 0;
+         $step = 4;
+      }
+
+      $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $order = $this->db($this->book)->get_where('pesanan', "ref = '" . $cek['id'] . "'", "id_menu");
+      } else {
+         $order = [];
+      }
+
+      $sisa_tagihan = 0;
+      foreach ($order as $dk) {
+         $subTotal = ($dk['harga'] * $dk['qty']) - $dk['diskon'];
+         $sisa_tagihan += $subTotal;
+      }
+
+      $yg_sudah_dibayar = 0;
+      $cek_dibayar = $this->db($this->book)->get_where('kas', "status_mutasi <> 2 AND jenis_transaksi = 1 AND ref = '" . $cek['id'] . "'");
+      foreach ($cek_dibayar as $b) {
+         $yg_sudah_dibayar += $b['jumlah'];
+         if ($b['status_mutasi'] == 0) {
+            $step = 4; //checking
+         }
+      }
+
+      $sisa_tagihan -= $yg_sudah_dibayar;
+
+      if ($sisa_tagihan > 0) {
+         $kembali = $uang_diterima - $sisa_tagihan;
+         if ($kembali < 0) {
+            $kembali = 0;
+         }
+
+         if ($uang_diterima >= $sisa_tagihan) {
+            $jumlah_bayar = $sisa_tagihan;
+         } else {
+            $jumlah_bayar = $uang_diterima;
+         }
+
+         $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali";
+         $vals = $this->id_cabang . ",1,1,'" . $cek['id'] . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar . "," . $this->id_user . "," . $uang_diterima . "," . $kembali;
+         $in = $this->db($this->book)->insertCols("kas", $cols, $vals);
+         if ($in['errno'] == 0) {
+            if ($uang_diterima >= $sisa_tagihan) {
+               $up = $this->db($this->book)->update('ref', "step = " . $step, "id = '" . $cek['id'] . "'");
+               echo $up['errno'] == 0 ? 0 : $up['error'];
+            } else {
+               echo 1;
+            }
+         } else {
+            echo $in['error'];
+         }
+      }
+   }
+
+   public function piutang()
+   {
+      $id = $_POST['id'];
+      $up = $this->db($this->book)->update('ref', "step = 3", "id = '" . $id . "'");
+      echo $up['errno'] == 0 ? 0 : $up['error'];
+   }
+
+   public function cek_bayar($nomor = 0)
+   {
+      $viewData = __CLASS__ . '/bayar';
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      $data['nomor'] = $nomor;
+
+      $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $data['order'] = $this->db($this->book)->get_where('pesanan', "ref = '" . $cek['id'] . "'", "id_menu");
+      } else {
+         $data['order'] = [];
+      }
+
+      $this->view($viewData, $data);
+   }
+
+   public function cek_piutang($nomor = 0)
+   {
+      $viewData = __CLASS__ . '/piutang';
+
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      $data['nomor'] = $nomor;
+
+      $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $data['order'] = $this->db($this->book)->get_where('pesanan', "ref = '" . $cek['id'] . "'", "id_menu");
+      } else {
+         $data['order'] = [];
+      }
+
+      $data['ref'] = $cek;
+
+      $this->view($viewData, $data);
+   }
+
+   function add_manual($nomor)
+   {
+      $p = $_POST;
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+      $num_qty = preg_replace('/[^0-9]/', '', $p['qty']);
+      $cek = $this->db($this->book)->get_where_row("ref", "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");
+      if (count($cek) > 0) {
+         $where = "id_menu = " . $p['id'] . " AND ref = '" . $cek['id'] . "'";
+         $cek_menu = $this->db($this->book)->get_where_row("pesanan", $where);
+         if (count($cek_menu) > 0) {
+            if ($num_qty <= 0) {
+               $del = $this->db($this->book)->delete_where("pesanan", $where);
+               if ($del['errno'] == 0) {
+                  $hitung_menu = $this->db($this->book)->count_where("pesanan", "ref = '" . $cek_menu['ref'] . "'");
+                  if ($hitung_menu == 0) {
+                     //update freq
+                     $this->db(0)->update("menu_item", "freq = freq - 1", "id = " . $p['id']);
+                     $this->db(0)->update("menu_kategori", "freq = freq - 1", "id = " . $p['id_kat']);
+
+                     $del = $this->db($this->book)->delete_where("ref", "id = '" . $cek_menu['ref'] . "'");
+                     echo $del['errno'] == 0 ? 1 : $del['error'];
+                  } else {
+                     echo 0;
+                  }
+               } else {
+                  echo $del['error'];
+               }
+            } else {
+               $up = $this->db($this->book)->update("pesanan", "qty = " . $num_qty, $where);
+               //update freq
+               $this->db(0)->update("menu_item", "freq = freq + 1", "id = " . $p['id']);
+               $this->db(0)->update("menu_kategori", "freq = freq + 1", "id = " . $p['id_kat']);
+               echo $up['errno'] == 0 ? 0 : $up['error'];
+            }
+         } else {
+            $cols = "ref, id_menu, qty, harga";
+            $vals = "'" . $cek['id'] . "'," . $p['id'] . "," . $num_qty . "," . $_SESSION[URL::SESSID]['menu'][$p['id']]['harga'];
+            $in = $this->db($this->book)->insertCols("pesanan", $cols, $vals);
+            //update freq
+            $this->db(0)->update("menu_item", "freq = freq + 1", "id = " . $p['id']);
+            $this->db(0)->update("menu_kategori", "freq = freq + 1", "id = " . $p['id_kat']);
+            echo $in['errno'] == 0 ? 0 : $in['error'];
+         }
+      } else {
+         if ($num_qty <= 0) {
+            echo "Qty 0 diabaikan";
+            exit();
+         }
+
+         $ref = date('mdHis') . $this->id_cabang;
+         $cols = "id, nomor, tgl, jam, id_cabang, id_user";
+         $vals = "'" . $ref . "'," . $nomor . ",'" . date('Y-m-d') . "','" . date("H:i") . "'," . $this->id_cabang . ", " . $id_user;
+         $in = $this->db($this->book)->insertCols("ref", $cols, $vals);
+         if ($in['errno'] == 0) {
+            $p = $_POST;
+            $cols = "ref, id_menu, qty, harga";
+            $vals = "'" . $ref . "'," . $p['id'] . "," . $num_qty . "," . $_SESSION[URL::SESSID]['menu'][$p['id']]['harga'];
+            $in = $this->db($this->book)->insertCols("pesanan", $cols, $vals);
+            //update freq
+            $this->db(0)->update("menu_item", "freq = freq + 1", "id = " . $p['id']);
+            $this->db(0)->update("menu_kategori", "freq = freq + 1", "id = " . $p['id_kat']);
+            echo $in['errno'] == 0 ? 0 : $in['error'];
+         } else {
+            echo $in['error'];
+         }
+      }
+   }
+
+   function set_diskon()
+   {
+      $p = $_POST;
+      $where = "id = " . $p['id'];
+      $cek_menu = $this->db($this->book)->get_where_row("pesanan", $where);
+      $max_diskon = $cek_menu['harga'] * $cek_menu['qty'];
+      if ($p['diskon'] > $max_diskon) {
+         echo "Dikon melebihi Total";
+         exit();
+      }
+      $up = $this->db($this->book)->update("pesanan", "diskon = " . $p['diskon'], $where);
+      echo $up['errno'] == 0 ? 0 : $up['error'];
+   }
+}

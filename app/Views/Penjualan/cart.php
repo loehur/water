@@ -104,7 +104,7 @@
   </div>
 <?php } ?>
 
-<?php if ($total > 0 && $_SESSION[URL::SESSID]['user']['id_privilege'] >= 30 && $data['ref']['pelanggan'] <> 0) { ?>
+<?php if ($total > 0 && $data['ref']['pelanggan'] <> 0) { ?>
   <div class="d-flex flex-row justify-content-between px-1 mt-3">
     <div class="piutang" onclick="load_piutang(<?= $data['nomor'] ?>)"><button class="btn btn-outline-danger">Jadikan Piutang</button></div>
     <div class="bayar" onclick="load_bayar(<?= $data['nomor'] ?>)"><button class="btn btn-outline-success">Pembayaran</button></div>

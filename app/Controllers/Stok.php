@@ -12,7 +12,6 @@ class Stok extends Controller
    {
       $layout = ['title' => 'Stok'];
       $data['tgl'] = [];
-      $menu_induk = $this->db(0)->get('menu_item', "id");
       for ($i = 0; $i >= -6; $i--) {
          $sales = 0;
          $tgl = date('Ymd', strtotime($i . ' days', strtotime(date('Y-m-d'))));
@@ -20,8 +19,8 @@ class Stok extends Controller
          $tgl_pesan = date('Y-m-d', strtotime($i . ' days', strtotime(date('Y-m-d'))));
          $terjual = $this->db($this->book)->get_cols_where('pesanan', 'id_menu, SUM(qty) as qty', "insertTime LIKE '" . $tgl_pesan . "%' GROUP BY id_menu", 1, 'id_menu'); //sale
 
-         foreach ($menu_induk as $id_menu => $d) {
-            $sales += ($terjual[$id_menu]['qty'] * $d['qty_induk']);
+         foreach ($terjual as $d) {
+            $sales += $d['qty'];
          }
 
          $data['qty'][$tgl]['t'] = $sales;

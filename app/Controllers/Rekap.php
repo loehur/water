@@ -89,7 +89,11 @@ class Rekap extends Controller
       }
       $refs = rtrim($refs, ',');
       $where = "ref IN (" . $refs . ")";
-      $total_jual = $this->db($this->book)->get_cols_where('pesanan', $cols, $where, 0)['total'];
+      $total_jual = 0;
+      $get = $this->db($this->book)->get_cols_where('pesanan', $cols, $where, 0);
+      if (isset($get['total'])) {
+         $total_jual = $get['total'];
+      }
 
       //PENDAPATAN
       $cols = "sum(jumlah) as total";

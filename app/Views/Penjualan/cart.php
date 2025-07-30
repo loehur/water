@@ -97,8 +97,13 @@
   <div class="px-1 w-100">
     <table class="table table-sm">
       <tr>
-        <td class=""><span class="text-purple">Pelanggan:</span> <span class="fw-bold text-danger"><?= strtoupper($data['pelanggan'][$data['ref']['pelanggan']]['nama']) ?></span></td>
-        <td class="text-end"><span class="text-purple">Galon Titip:</span> <span class="fw-bold text-danger"><?= $data['pelanggan'][$data['ref']['pelanggan']]['titip'] ?></span></td>
+        <td class=""><span class="">Pelanggan<br></span> <span class="fw-bold text-primary"><?= strtoupper($data['pelanggan'][$data['ref']['pelanggan']]['nama']) ?></span></td>
+        <td class="text-end">
+          <span class="">Galon Titip:</span> <span class="fw-bold text-danger"><?= $data['pelanggan'][$data['ref']['pelanggan']]['titip'] ?></span>
+          <?php if (isset($data['piutang'][$data['ref']['pelanggan']])) { ?>
+            <br><span class="">Piutang:</span> <span class="fw-bold text-danger">Rp<?= number_format($data['piutang'][$data['ref']['pelanggan']]) ?></span>
+          <?php } ?>
+        </td>
       </tr>
     </table>
   </div>
@@ -106,8 +111,8 @@
 
 <?php if ($total > 0 && $data['ref']['pelanggan'] <> 0) { ?>
   <div class="d-flex flex-row justify-content-between px-1 mt-3">
-    <div class="piutang" onclick="load_piutang('<?= $data['ref']['id'] ?>')"><button class="btn btn-outline-danger">Jadikan Piutang</button></div>
-    <div class="bayar" onclick="load_bayar('<?= $data['ref']['id'] ?>')"><button class="btn btn-outline-success">Pembayaran</button></div>
+    <div class="piutang" onclick="load_piutang('<?= $data['ref']['id'] ?>')"><button class="btn btn-danger">Jadikan Piutang</button></div>
+    <div class="bayar" onclick="load_bayar('<?= $data['ref']['id'] ?>')"><button class="btn btn-success">Pembayaran</button></div>
   </div>
 <?php } ?>
 <div class="pb-5"></div>

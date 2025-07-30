@@ -37,28 +37,31 @@ class Penjualan extends Controller
 
       $data['ref'] = $cek;
 
-      $data['ref_piutang'] = $this->db($this->book)->get_where('ref', "step = 3 AND pelanggan = " . $cek['pelanggan'], 'id');
+      $data['piutang'] = [];
+      if (isset($cek['pelanggan']) && $cek['pelanggan'] > 0) {
+         $data['ref_piutang'] = $this->db($this->book)->get_where('ref', "step = 3 AND pelanggan = " . $cek['pelanggan'], 'id');
 
-      $order = [];
-      $piutang = [];
-      foreach ($data['ref_piutang'] as $key => $r) {
-         $order[$key] = $this->db($this->book)->get_where('pesanan', "ref = '" . $key . "'");
-         foreach ($order[$key] as $dk) {
-            $subTotal = ($dk['harga'] * $dk['qty']) - $dk['diskon'];
-            if (isset($piutang[$r['pelanggan']])) {
-               $piutang[$r['pelanggan']] += $subTotal;
-            } else {
-               $piutang[$r['pelanggan']] = $subTotal;
+         $order = [];
+         $piutang = [];
+         foreach ($data['ref_piutang'] as $key => $r) {
+            $order[$key] = $this->db($this->book)->get_where('pesanan', "ref = '" . $key . "'");
+            foreach ($order[$key] as $dk) {
+               $subTotal = ($dk['harga'] * $dk['qty']) - $dk['diskon'];
+               if (isset($piutang[$r['pelanggan']])) {
+                  $piutang[$r['pelanggan']] += $subTotal;
+               } else {
+                  $piutang[$r['pelanggan']] = $subTotal;
+               }
+            }
+
+            $cek_dibayar[$key] = $this->db($this->book)->get_where('kas', "status_mutasi <> 2 AND jenis_transaksi = 1 AND ref = '" . $key . "'");
+            foreach ($cek_dibayar[$key] as $b) {
+               $piutang[$r['pelanggan']] -= $b['jumlah'];
             }
          }
-
-         $cek_dibayar[$key] = $this->db($this->book)->get_where('kas', "status_mutasi <> 2 AND jenis_transaksi = 1 AND ref = '" . $key . "'");
-         foreach ($cek_dibayar[$key] as $b) {
-            $piutang[$r['pelanggan']] -= $b['jumlah'];
-         }
+         $data['piutang'] = $piutang;
       }
 
-      $data['piutang'] = $piutang;
 
       $this->view($viewData, $data);
    }

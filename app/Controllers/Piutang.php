@@ -124,7 +124,7 @@ class Piutang extends Controller
          $ref_bayar = date('mdHis') . $this->id_cabang;
          $jumBayar = $p['jumBayar'];
          $metode = $p['metode'];
-         if ($metode == 1) {
+         if ($metode == 1 || $this->id_privilege == 100) {
             $st_mutasi = 1;
             $step = 1;
          } else {

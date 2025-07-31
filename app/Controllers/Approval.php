@@ -31,6 +31,19 @@ class Approval extends Controller
    {
       $data['key'] = $key;
       $data[$this->mode[$key]] = $this->db($this->book)->get_where('kas', "status_mutasi = 0 AND " . $this->where[$key], 'id');
+      $refs_arr = array_column($data[$this->mode[$key]], 'ref');
+      $refs_arr = array_unique($refs_arr);
+      $refs = "";
+      foreach ($refs_arr as $ds) {
+         $refs .= $ds . ",";
+      }
+
+      $refs = rtrim($refs, ',');
+      $where = "id IN (" . $refs . ")";
+      $data['ref'] = $this->db($this->book)->get_where('ref', $where, 'id');
+      $data['pelanggan'] = $this->db(0)->get('pelanggan', 'id');
+
+
       $viewData = __CLASS__ . '/' . $this->mode[$key];
       $this->view($viewData, $data);
    }

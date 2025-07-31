@@ -127,7 +127,6 @@ class Penjualan extends Controller
 
    public function bayar()
    {
-      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
       $ref = $_POST['ref'];
       $uang_diterima = $_POST['dibayar'];
       $metode = $_POST['metode'];

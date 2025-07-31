@@ -8,11 +8,13 @@
       $f2 = $a['note'];
       $f2b = $a['note_primary'];
       $f4 = $a['jumlah'];
-      $st = $a['status_mutasi']; ?>
+      $st = $a['status_mutasi'];
+    ?>
       <tr id="tr<?= $id ?>">
         <td class="text-end">
           <small>#<?= $id ?> <?= date('d M, H:i', strtotime($f1)) ?> </small>
           <br><span class="badge bg-gradient bg-primary"><i class="fas fa-qrcode"></i> <?= strtoupper(URL::METOD_BAYAR[$a['metode_mutasi']]) ?></span> <b>Rp<span><?= number_format($f4) ?></span></b></span>
+          <br><span class="text-purple"><?= strtoupper($data['pelanggan'][$data['ref'][$a['ref']]['pelanggan']]['nama']) ?></span>
           <br><small><?= $f2 ?></small>
         </td>
         <td class='text-right align-content-center'>

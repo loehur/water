@@ -1,5 +1,4 @@
 <script src="<?= URL::ASSETS_URL ?>js/alpine.min.js"></script>
-<script src="<?= URL::ASSETS_URL ?>mine/luhur.js"></script>
 
 <?php
 $total = 0;
@@ -94,9 +93,9 @@ $total = 0;
         if (jumKembali < 0) {
           this.jumKembali = 0;
         } else {
-          this.jumKembali = number_format(jumKembali);
+          this.jumKembali = this.number_format(jumKembali);
         }
-        this.dibayar = number_format(jumBayar);
+        this.dibayar = this.number_format(jumBayar);
       },
 
       bayarOK() {

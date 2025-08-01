@@ -13,7 +13,7 @@ class Stok extends Controller
       $layout = ['title' => 'Stok'];
       $data['tgl'] = [];
       $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
-      for ($i = 0; $i >= -6; $i--) {
+      for ($i = 0; $i >= -10; $i--) {
          $tgl = date('Ymd', strtotime($i . ' days', strtotime(date('Y-m-d'))));
          array_push($data['tgl'], $tgl);
          $tgl_pesan = date('Y-m-d', strtotime($i . ' days', strtotime(date('Y-m-d'))));

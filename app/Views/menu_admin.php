@@ -9,6 +9,20 @@ $menu[1] = [
     ],
     [
         'p' => 100,
+        'c' => 'Stok_A',
+        'title' => 'Sales All',
+        'icon' => 'fas fa-vote-yea',
+        'txt' => 'Sales All',
+    ],
+    [
+        'p' => 100,
+        'c' => 'Riwayat_A',
+        'title' => 'Riwayat All',
+        'icon' => 'far fa-clock',
+        'txt' => 'Riwayat All',
+    ],
+    [
+        'p' => 100,
         'c' => '',
         'title' => 'Rekap',
         'icon' => 'fas fa-chart-line',

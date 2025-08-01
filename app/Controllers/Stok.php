@@ -18,7 +18,7 @@ class Stok extends Controller
          $tgl = date('Ymd', strtotime($i . ' days', strtotime(date('Y-m-d'))));
          array_push($data['tgl'], $tgl);
          $tgl_pesan = date('Y-m-d', strtotime($i . ' days', strtotime(date('Y-m-d'))));
-         $refs_arr = $this->db($this->book)->get_where('ref', "tgl = '" . $tgl_pesan . "' AND user = " . $id_user, 'id');
+         $refs_arr = $this->db($this->book)->get_where('ref', "tgl = '" . $tgl_pesan . "' AND id_user = " . $id_user, 'id');
          $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
          $refs = "";
          foreach ($refs_arr as $key => $d) {

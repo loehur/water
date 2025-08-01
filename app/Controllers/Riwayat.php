@@ -12,7 +12,7 @@ class Riwayat extends Controller
    {
       $layout = ['title' => 'Riwayat Pesanan'];
       $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
-      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d") . "' AND user = " . $id_user . " ORDER BY id DESC", 'id');
+      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d") . "' AND id_user = " . $id_user . " ORDER BY id DESC", 'id');
 
       $order = [];
       $total = [];

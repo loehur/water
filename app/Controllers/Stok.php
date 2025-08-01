@@ -12,12 +12,32 @@ class Stok extends Controller
    {
       $layout = ['title' => 'Stok'];
       $data['tgl'] = [];
+      $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
       for ($i = 0; $i >= -6; $i--) {
          $sales = 0;
          $tgl = date('Ymd', strtotime($i . ' days', strtotime(date('Y-m-d'))));
          array_push($data['tgl'], $tgl);
          $tgl_pesan = date('Y-m-d', strtotime($i . ' days', strtotime(date('Y-m-d'))));
-         $terjual = $this->db($this->book)->get_cols_where('pesanan', 'id_menu, SUM(qty) as qty', "insertTime LIKE '" . $tgl_pesan . "%' GROUP BY id_menu", 1, 'id_menu'); //sale
+         $refs_arr = $this->db($this->book)->get_where('ref', "tgl = '" . $tgl_pesan . "' AND user = " . $id_user, 'id');
+         $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
+         $refs = "";
+         foreach ($refs_arr as $key => $d) {
+            $refs .= $key . ",";
+         }
+         $refs = rtrim($refs, ',');
+         if (empty($refs)) {
+            $refs = "''"; // If no refs, set to empty string to avoid SQL error
+         }
+         $data['qty'][$tgl]['t'] = 0; // Initialize total sales for the day
+         $sales = 0; // Reset sales count for the day
+         // Prepare the where clause for the query
+         if (empty($refs)) {
+            $where = "1=0"; // If no refs, set to a condition that returns no results
+         } else {
+            $where = "ref IN (" . $refs . ")";
+         }
+
+         $terjual = $this->db($this->book)->get_cols_where('pesanan', 'id_menu, SUM(qty) as qty', $where, 1, 'id_menu'); //sale
 
          foreach ($terjual as $d) {
             $sales += $d['qty'];

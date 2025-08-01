@@ -21,7 +21,7 @@ class Stok extends Controller
          $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
          $refs = "";
          foreach ($refs_arr as $key => $d) {
-            $refs .= $key . ",";
+            $refs .= $d . ",";
          }
          $refs = rtrim($refs, ',');
          if (empty($refs)) {

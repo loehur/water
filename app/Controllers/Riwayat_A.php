@@ -1,6 +1,6 @@
 <?php
 
-class Riwayat extends Controller
+class Riwayat_A extends Controller
 {
    public function __construct()
    {

@@ -1,6 +1,6 @@
 <?php
 
-class Stok extends Controller
+class Stok_A extends Controller
 {
    public function __construct()
    {

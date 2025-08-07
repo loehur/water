@@ -37,13 +37,6 @@ $menu[0] = [
     ],
     [
         'p' => 0,
-        'c' => 'Absen',
-        'title' => 'Absen',
-        'icon' => 'fas fa-calendar-check',
-        'txt' => 'Absen'
-    ],
-    [
-        'p' => 0,
         'c' => 'Pelanggan',
         'title' => 'Pelanggan',
         'icon' => 'fas fa-address-book',

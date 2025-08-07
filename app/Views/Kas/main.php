@@ -3,8 +3,10 @@
   <div class="col p-1">
     <div class="d-flex flex-row">
       <div class="mr-auto">
-        <small>Saldo Kas</small><br>
-        <span class="text-bold text-success">Rp. <?= number_format($kas); ?></span>
+        <?php if ($_SESSION[URL::SESSID]['user']['id_privilege'] == 100) { ?>
+          <small>Saldo Kas</small><br>
+          <span class="text-bold text-success">Rp. <?= number_format($kas); ?></span>
+        <?php } ?>
       </div>
       <div class="p-0 pr-0 pb-2 pt-2">
         <div class="btn-group dropdown">
@@ -13,7 +15,9 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Pengeluaran</a>
-            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal3">Penarikan</a>
+            <?php if ($_SESSION[URL::SESSID]['user']['id_privilege'] == 100) { ?>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal3">Penarikan</a>
+            <?php } ?>
           </div>
         </div>
       </div>

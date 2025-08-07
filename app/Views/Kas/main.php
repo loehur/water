@@ -150,12 +150,8 @@
   </div>
 </div>
 
-<!-- SCRIPT -->
-<script src="<?= URL::ASSETS_URL ?>plugins/select2/select2.min.js"></script>
-
 <script>
   $(document).ready(function() {
-    selectList();
     $("div#nTunai").hide();
     var saldoKas = <?= $kas ?>;
     $('input.saldoKas').val(formatter.format(saldoKas));
@@ -207,18 +203,6 @@
     style: 'currency',
     currency: 'IDR',
   });
-
-  function selectList() {
-    $('select.userKeluar').select2({
-      dropdownParent: $("#userKeluar"),
-    });
-    $('select.jenisKeluar').select2({
-      dropdownParent: $("#jenisKeluar"),
-    });
-    $('select.tarik').select2({
-      dropdownParent: $("#exampleModal3"),
-    });
-  }
 
   function tarik(idnya) {
     $.ajax({

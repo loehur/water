@@ -87,7 +87,7 @@
         <form action="<?= URL::BASE_URL; ?>Kas/insert_pengeluaran" method="POST">
           <div class="card-body">
             <div class="form-group">
-              <input type="text" name='kas' class="form-control text-center text-bold saldoKas" id="exampleInputEmail1" readonly>
+              <input type="<?= $_SESSION[URL::SESSID]['user']['id_privilege'] == 100 ? 'text' : 'hidden' ?>" name='kas' class="form-control text-center text-bold saldoKas" id="exampleInputEmail1" readonly>
             </div>
             <div class="form-group" id="jenisKeluar">
               <label for="exampleInputEmail1">Jenis Pengeluaran</label>
@@ -130,7 +130,7 @@
         <form action="<?= URL::BASE_URL; ?>Kas/insert" method="POST">
           <div class="card-body">
             <div class="form-group">
-              <input type="<?= $_SESSION[URL::SESSID]['user']['id_privilege'] == 100 ? 'text' : 'hidden' ?>" name='kas' class="form-control text-center text-bold saldoKas" id="exampleInputEmail1" readonly>
+              <input type="text" name='kas' class="form-control text-center text-bold saldoKas" id="exampleInputEmail1" readonly>
             </div>
             <div class="form-group">
               <label for="exampleInputEmail1">Jumlah Rp</label>

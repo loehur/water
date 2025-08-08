@@ -110,7 +110,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-sm rounded-0 w-100 bg-gradient btn-danger">Buat Pengeluaran</button>
+            <button type="submit" class="btn rounded-0 w-100 bg-gradient btn-danger">Buat Pengeluaran</button>
           </div>
         </form>
       </div>
@@ -142,7 +142,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-sm w-100 bg-gradient btn-primary">Tarik Kas</button>
+            <button type="submit" class="btn w-100 bg-gradient btn-primary">Tarik Kas</button>
           </div>
         </form>
       </div>

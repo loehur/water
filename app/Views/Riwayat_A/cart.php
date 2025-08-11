@@ -38,9 +38,21 @@
   <?php
   $dibayar = 0;
   foreach ($data['bayar'] as $b) {
-    $dibayar += $b['jumlah'] ?>
+    $dibayar += $b['jumlah'];
+    $st = "<span class='bg-dark'>???</span>";
+    switch ($b['status_mutasi']) {
+      case 1:
+        $st = '<span class="text-success"><i class="fa-solid fa-check"></i></span>';
+        break;
+      case 2:
+        $st = "<span class='text-danger'><i class='fa-solid fa-xmark'></i></span>";
+        break;
+      case 0:
+        $st = "<span class='text-warning'><i class='fa-solid fa-circle'></i></span>";
+        break;
+    } ?>
     <tr>
-      <td class="text-end"><?= URL::METOD_BAYAR[$b['metode_mutasi']] ?></td>
+      <td class="text-end"><?= $st ?> <?= URL::METOD_BAYAR[$b['metode_mutasi']] ?></td>
       <td class="text-end">-<?= number_format($b['jumlah'])  ?></td>
     </tr>
   <?php } ?>

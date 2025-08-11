@@ -3,7 +3,7 @@ foreach ($data['ref'] as $key => $r) { ?>
   <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
     <div class="col">
       #<?= $r['id'] ?><br>
-      <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b>
+      <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b><br>
     </div>
     <div class="col text-end">
       <?= date('d M y, H:i', strtotime($r['tgl'] . " " . $r['jam'] . ":00")) ?><br>
@@ -52,7 +52,7 @@ foreach ($data['ref'] as $key => $r) { ?>
     buka_canvas('offcanvasRight');
     var ref = $(this).attr('data-ref');
     $("div#cart").load('<?= URL::BASE_URL ?>Load/spinner/2', function() {
-      $("div#cart").load('<?= URL::BASE_URL ?>Riwayat/cart/' + ref);
+      $("div#cart").load('<?= URL::BASE_URL ?>Riwayat_A/cart/' + ref);
     });
   })
 </script>

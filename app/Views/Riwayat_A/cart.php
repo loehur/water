@@ -54,3 +54,29 @@
     </tr>
   <?php } ?>
 </table>
+
+<btn class="btn btn-danger w-100 btn_hapus">Batalkan</btn>
+
+<script>
+  $(".btn_hapus").dblclick(function() {
+    var ref = "<?= $data['ref'] ?>";
+    $.ajax({
+      url: '<?= URL::BASE_URL ?>Riwayat_A/hapus/' + ref,
+      type: 'POST',
+      data: {
+        ref: ref
+      },
+
+      success: function(response) {
+        if (response == 0) {
+          location.reload(true);
+        } else {
+          alert(response);
+        }
+      },
+      error: function(xhr, status, error) {
+        alert("Error: " + error);
+      }
+    });
+  })
+</script>

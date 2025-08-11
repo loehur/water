@@ -49,8 +49,13 @@ class Riwayat_A extends Controller
       if ($del['errno'] == 0) {
          $hitung_menu = $this->db($this->book)->count_where("pesanan", "ref = '" . $ref . "'");
          if ($hitung_menu == 0) {
-            $del = $this->db($this->book)->delete_where("ref", "id = '" . $ref . "'");
-            echo $del['errno'] == 0 ? 0 : $del['error'];
+            $del = $this->db($this->book)->delete_where("kas", "ref = '" . $ref . "'");
+            if ($del['errno'] == 0) {
+               $del = $this->db($this->book)->delete_where("ref", "id = '" . $ref . "'");
+               echo $del['errno'] == 0 ? 0 : $del['error'];
+            } else {
+               echo $del['error'];
+            }
          } else {
             echo 0;
          }

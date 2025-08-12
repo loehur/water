@@ -27,14 +27,10 @@ foreach ($data['pelanggan'] as $key => $r) { ?>
   <div class="offcanvas-body pt-0">
 
     <div class="row mt-5">
-      <div class="col">Pelanggan</div>
-      <div class="col text-end">:</div>
-      <div class="col fw-bold" id="pelanggan"></div>
-    </div>
-    <div class="row">
-      <div class="col">Galon</div>
-      <div class="col text-end">:</div>
-      <div class="col fw-bold" id="galon"></div>
+      <div class="col text-center">
+        <h4 class="fw-bold text-success" id="pelanggan"></h4>
+        <h5 class="fw-bold text-purple"><span id="galon"></span> Galon</h5>
+      </div>
     </div>
 
     <div class="row mt-5">

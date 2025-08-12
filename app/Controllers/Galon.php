@@ -12,7 +12,7 @@ class Galon extends Controller
    {
       $layout = ['title' => 'Data Galon'];
 
-      $data['pelanggan'] = $this->db(0)->get_where('pelanggan', "id_cabang = '" . $this->id_cabang . "' AND titip <> 0 ORDER BY last_order ASC LIMIT 50");
+      $data['pelanggan'] = $this->db(0)->get_where('pelanggan', "id_cabang = '" . $this->id_cabang . "' AND titip <> 0 ORDER BY last_order ASC LIMIT 100");
 
       $this->view('layout', $layout);
       $this->view(__CLASS__ . "/main", $data);

@@ -9,6 +9,13 @@ $menu[0] = [
     ],
     [
         'p' => 0,
+        'c' => 'Galon',
+        'title' => 'Data Galon',
+        'icon' => 'fa-solid fa-bottle-water',
+        'txt' => 'Data Galon'
+    ],
+    [
+        'p' => 0,
         'c' => 'Stok',
         'title' => 'Stok',
         'icon' => 'fas fa-vote-yea',

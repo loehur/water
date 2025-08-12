@@ -96,11 +96,11 @@ class Rekap extends Controller
       }
 
       //PENDAPATAN
-      $cols = "sum(jumlah) as total";
-      $where = $whereCabang . "jenis_transaksi = 1 AND status_mutasi <> 2 AND insertTime LIKE '%" . $today . "%'";
+      $cols = "sum(jumlah) as total, metode_mutasi";
+      $where = $whereCabang . "jenis_transaksi = 1 AND status_mutasi <> 2 AND insertTime LIKE '%" . $today . "%' GROUP BY metode_mutasi";
       $where_umum = $where;
       $kas = 0;
-      $kas = $this->db($this->book)->get_cols_where('kas', $cols, $where_umum, 0)['total'];
+      $kas = $this->db($this->book)->get_cols_where('kas', $cols, $where_umum, 1, 'metode_mutasi');
 
       //PENGELUARAN
       $cols = "note_primary, sum(jumlah) as total";
@@ -121,29 +121,6 @@ class Rekap extends Controller
       $where_tarik =  $whereCabang . "jenis_transaksi = 2 AND status_mutasi <> 3 AND insertTime LIKE '%" . $today . "%'";
       $kas_tarik = $this->db($this->book)->get_cols_where('kas', $cols, $where, 1);
 
-      //GAJI KARYAWAN
-      $cols = "sum(jumlah) as total";
-      $gaji = 0;
-      if ($whereCabang == '') {
-         $where = $whereCabang . "tipe = 1 AND tgl = '" . $today . "'";
-
-         $get = $this->db(0)->get_cols_where("gaji_result", $cols, $where, 0);
-         if (isset($get['total'])) {
-            $gaji = $get['total'];
-         } else {
-            $gaji = 0;
-         }
-      } else {
-         $karyawan = $this->db(0)->get_cols_where('user', 'id_user', $this->wCabang, 1);
-         foreach ($karyawan as $kr) {
-            $where = "tipe = 1 AND id_karyawan = " . $kr['id_user'] . " AND tgl = '" . $today . "'";
-            $get = $this->db(0)->get_cols_where("gaji_result", $cols, $where, 0);
-            if (isset($get['total'])) {
-               $gaji += $get['total'];
-            }
-         }
-      }
-
       $this->view('layout', $layout);
       $this->view($viewData, [
          'total_jual' => $total_jual,
@@ -156,7 +133,6 @@ class Rekap extends Controller
          'kas_keluar' => $kas_keluar,
          'kas_tarik' => $kas_tarik,
          'prepost_cost' => $prepost_cost,
-         'gaji' => $gaji
       ]);
    }
 

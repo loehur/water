@@ -192,14 +192,25 @@ $target_page_rekap = $uri_segments[$uriCount - 1];
     </div>
 
     <div class="card">
-      <?php $total_pendapatan = $data['kasLaundry']; ?>
+      <?php
+      $total_pendapatan = 0;
+      $data_pendapatan = $data['kasLaundry'];
+      ?>
       <div class="card-body p-0 table-responsive-sm">
         <table class="table table-sm w-100">
           <tbody>
-            <tr class="table-warning">
-              <td class="fw-bold">Total Pendapatan</td>
-              <td class="text-right fw-bold">Rp<?= number_format($total_pendapatan) ?></td>
-            </tr>
+            <?php foreach ($data_pendapatan as $key => $v) {
+              $total_pendapatan += $v['total'] ?>
+              <tr>
+                <td><?= URL::METOD_BAYAR[$key] ?></td>
+                <td class="text-end"><?= number_format($v['total']) ?></td>
+              </tr>
+              <tr>
+              <?php } ?>
+              <tr class="table-warning">
+                <td class="fw-bold">Total Pendapatan</td>
+                <td class="text-right fw-bold">Rp<?= number_format($total_pendapatan) ?></td>
+              </tr>
           </tbody>
         </table>
       </div>
@@ -222,17 +233,6 @@ $target_page_rekap = $uri_segments[$uriCount - 1];
               echo "<td class='text-right'>Rp" . number_format($a['total']) . "</td>";
               echo "</tr>";
               $total_keluar += $a['total'];
-            }
-
-            $gaji = $data['gaji'];
-            $gaji = (int)$gaji;
-
-            if ($gaji > 0) {
-              echo "<tr>";
-              echo "<td class=''>Gaji Karyawan</td>";
-              echo "<td class='text-right'>Rp" . number_format($gaji) . "</td>";
-              echo "</tr>";
-              $total_keluar += $gaji;
             }
 
             $total_keluar += $data['prepost_cost'];

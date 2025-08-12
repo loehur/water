@@ -7,7 +7,7 @@ foreach ($data['pelanggan'] as $key => $r) { ?>
     </div>
     <div class="col text-end">
       <?php
-      $tanggal = $r['last_order'] . ' 09:02:23';
+      $tanggal = $r['last_order'] . ' 00:00:00';
       $tanggal = new DateTime($tanggal);
       $sekarang = new DateTime();
       $beda = $tanggal->diff($sekarang);

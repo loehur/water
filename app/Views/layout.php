@@ -132,7 +132,7 @@ if ($log_mode == 1) {
             </div>
         </nav>
 
-        <aside class="main-sidebar sidebar-light-red border-end position-fixed">
+        <aside class="main-sidebar sidebar-light-blue border-end position-fixed">
             <div class="sidebar">
                 <div class="user-panel mt-2 pb-2 mb-2 d-flex">
                     <div class="info">

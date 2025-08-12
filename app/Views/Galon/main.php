@@ -1,6 +1,6 @@
 <?php
 foreach ($data['pelanggan'] as $key => $r) { ?>
-  <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
+  <div id="row<?= $r['id'] ?>" data-id="<?= $r['id'] ?>" data-pelanggan="<?= strtoupper($r['nama']) ?>" data-titip="<?= $r['titip'] ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
     <div class="col">
       <b class="text-success"><?= strtoupper($r['nama']) ?></b><br>
       <span class=""><?= date('d M y', strtotime($r['last_order'] . " " . "00:00")) ?></span>
@@ -25,7 +25,24 @@ foreach ($data['pelanggan'] as $key => $r) { ?>
     </div>
   </div>
   <div class="offcanvas-body pt-0">
-    <div class="px-1" id="cart"></div>
+
+    <div class="row mt-5">
+      <div class="col">Pelanggan</div>
+      <div class="col text-end">:</div>
+      <div class="col fw-bold" id="pelanggan"></div>
+    </div>
+    <div class="row">
+      <div class="col">Galon</div>
+      <div class="col text-end">:</div>
+      <div class="col fw-bold" id="galon"></div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col text-center">
+        <button class="btn btn-danger w-100" onclick="ambilGalon()">Ambil Galon</button>
+      </div>
+    </div>
+
   </div>
   <div style="max-height: 50px; cursor:pointer" class="w-100 mt-1 bg-light bg-gradient" data-bs-dismiss="offcanvas">
     <div class="d-flex justify-content-center" style="box-shadow: 0px -1px 10px silver; height:50px">
@@ -35,11 +52,32 @@ foreach ($data['pelanggan'] as $key => $r) { ?>
 </div>
 
 <script>
+  var id_pelanggan = 0;
   $(".cekPesanan").click(function() {
     buka_canvas('offcanvasRight');
-    var ref = $(this).attr('data-ref');
-    $("div#cart").load('<?= URL::BASE_URL ?>Load/spinner/2', function() {
-      $("div#cart").load('<?= URL::BASE_URL ?>Riwayat/cart/' + ref);
-    });
+    id_pelanggan = $(this).data('id');
+    $("#pelanggan").html($(this).data('pelanggan'));
+    $("#galon").html($(this).data('titip'));
   })
+
+  function ambilGalon() {
+    $.ajax({
+      url: '<?= URL::BASE_URL ?>Galon/ambilGalon',
+      type: "POST",
+      data: {
+        id_pelanggan: id_pelanggan
+      },
+      success: function(response) {
+        response = JSON.parse(response);
+        if (response.status) {
+          $("#row" + id_pelanggan).remove();
+          $('.offcanvas.show').each(function() {
+            $(this).offcanvas('hide');
+          });
+        } else {
+          alert(response.message);
+        }
+      },
+    })
+  }
 </script>

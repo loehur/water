@@ -139,6 +139,8 @@ class Penjualan extends Controller
          $step = 4;
       }
 
+      $data_ref = $this->db($this->book)->get_where_row('ref', "id = '" . $ref . "'");
+      $pelanggan = $data_ref['pelanggan'];
       $order = $this->db($this->book)->get_where('pesanan', "ref = '" . $ref . "'", "id_menu");
 
       $sisa_tagihan = 0;
@@ -170,8 +172,8 @@ class Penjualan extends Controller
             $jumlah_bayar = $uang_diterima;
          }
 
-         $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali";
-         $vals = $this->id_cabang . ",1,1,'" . $ref . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar . "," . $this->id_user . "," . $uang_diterima . "," . $kembali;
+         $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali, id_client";
+         $vals = $this->id_cabang . ",1,1,'" . $ref . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar . "," . $this->id_user . "," . $uang_diterima . "," . $kembali . "," . $pelanggan;
          $in = $this->db($this->book)->insertCols("kas", $cols, $vals);
          if ($in['errno'] == 0) {
             if ($uang_diterima >= $sisa_tagihan) {

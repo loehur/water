@@ -1,22 +1,38 @@
-<?php
-foreach ($data['pelanggan'] as $key => $r) { ?>
-  <div id="row<?= $r['id'] ?>" data-id="<?= $r['id'] ?>" data-pelanggan="<?= strtoupper($r['nama']) ?>" data-titip="<?= $r['titip'] ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
-    <div class="col">
-      <b class="text-success"><?= strtoupper($r['nama']) ?></b><br>
-      <span class=""><?= date('d M y', strtotime($r['last_order'] . " " . "00:00")) ?></span>
-    </div>
-    <div class="col text-end">
-      <?php
-      $tanggal = $r['last_order'] . ' 00:00:00';
-      $tanggal = new DateTime($tanggal);
-      $sekarang = new DateTime();
-      $beda = $tanggal->diff($sekarang);
-      ?>
-      <span class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= $r['titip'] ?></span><br>
-      <span class="fw-bold text-danger"><?= $beda->d ?> Hari</span>
-    </div>
-  </div>
-<?php } ?>
+<link rel="stylesheet" href="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.css" rel="stylesheet" />
+<div class="mt-3"></div>
+<table id="dt_tb" class="w-100 table table-sm mt-2">
+  <thead>
+    <tr>
+      <th>
+        Pelanggan
+      </th>
+      <th class="text-end">
+        Galon/Lama
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    foreach ($data['pelanggan'] as $key => $r) { ?>
+      <tr id="row<?= $r['id'] ?>" data-id="<?= $r['id'] ?>" data-pelanggan="<?= strtoupper($r['nama']) ?>" data-titip="<?= $r['titip'] ?>" class="mx-0 py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
+        <td>
+          <b class="text-success"><?= strtoupper($r['nama']) ?></b><br>
+          <span class=""><?= date('d M y', strtotime($r['last_order'] . " " . "00:00")) ?></span>
+        </td>
+        <td class="text-end">
+          <?php
+          $tanggal = $r['last_order'] . ' 00:00:00';
+          $tanggal = new DateTime($tanggal);
+          $sekarang = new DateTime();
+          $beda = $tanggal->diff($sekarang);
+          ?>
+          <span class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= $r['titip'] ?></span><br>
+          <span class="fw-bold text-danger"><?= $beda->d ?> Hari</span>
+        </td>
+      </tr>
+    <?php } ?>
+  </tbody>
+</table>
 
 <div class="offcanvas offcanvas-end overflow-hidden" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
   <div class="bg-light bg-gradient mb-2" style="box-shadow: 0px 1px 10px silver;">
@@ -47,7 +63,21 @@ foreach ($data['pelanggan'] as $key => $r) { ?>
   </div>
 </div>
 
+<script src="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.js"></script>
 <script>
+  $(document).ready(function() {
+    $('#dt_tb').dataTable({
+      "bLengthChange": false,
+      "bFilter": true,
+      "bInfo": false,
+      "ordering": false,
+      "bAutoWidth": false,
+      "pageLength": 50,
+      "scrollY": 530,
+      "dom": "lfrti"
+    });
+  });
+
   var id_pelanggan = 0;
   $(".cekPesanan").click(function() {
     buka_canvas('offcanvasRight');

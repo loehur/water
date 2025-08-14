@@ -26,7 +26,7 @@ $menu[0] = [
         'c' => 'Riwayat',
         'title' => 'Riwayat Pesanan',
         'icon' => 'far fa-clock',
-        'txt' => 'Riwayat Pesanan',
+        'txt' => 'Riwayat',
     ],
     [
         'p' => 0,

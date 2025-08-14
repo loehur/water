@@ -1,30 +1,25 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th class="text-end">Sales</th>
-    </tr>
-  </thead>
-  <?php foreach ($data['tgl'] as $c) {
-    $day = date('l, d M Y', strtotime($c)) ?>
-    <tr>
-      <td><?= $day ?></td>
-      <td class="text-end"><?= $data['qty'][$c]['t'] ?></td>
-    </tr>
-  <?php } ?>
-</table>
-<div class="offcanvas offcanvas-end overflow-hidden" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="canvas1">
-  <div class="bg-light bg-gradient mb-2" style="box-shadow: 0px 1px 10px silver;">
-    <div class="row py-2" style="cursor: pointer;" data-bs-dismiss="offcanvas">
-      <div class="col py-2 w-100 text-dark text-center"><i class="fas fa-arrow-left"></i> &nbsp; Kembali</div>
-    </div>
+<?php $d = $data; ?>
+
+<div class="row mt-2 mx-1 py-2">
+  <div class="col text-center">
+    <h4 class="text-purple">Hari Ini</h4>
+    <h3 class="fw-bold"><?= number_format($d['me'] + $d['xme']) ?></h3>
   </div>
-  <div class="offcanvas-body pt-0">
-    <div class="px-1 pt-2" id="load1"></div>
+</div>
+<div class="row">
+  <div class="col text-center border-end">
+    <h5>Saya</h5>
+    <h4 class="fw-bold"><?= number_format($d['me'] + $d['xme']) ?></h4>
   </div>
-  <div style="max-height: 50px; cursor:pointer" class="w-100 mt-1 bg-light bg-gradient" data-bs-dismiss="offcanvas">
-    <div class="d-flex justify-content-center" style="box-shadow: 0px -1px 10px silver; height:50px">
-      <div class="align-self-center"><i class="fas fa-arrow-left"></i> &nbsp; Kembali</div>
-    </div>
+  <div class="col text-center">
+    <h5>Tim</h5>
+    <h4 class="fw-bold"><?= number_format($d['me'] + $d['xme']) ?></h4>
+  </div>
+</div>
+<hr>
+<div class="row mt-5">
+  <div class="col text-center">
+    <h4 class="text-success">Bulan Ini</h4>
+    <h3 class="fw-bold"><?= number_format($d['allm']) ?></h3>
   </div>
 </div>

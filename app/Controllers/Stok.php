@@ -11,34 +11,56 @@ class Stok extends Controller
    public function index()
    {
       $layout = ['title' => 'Stok'];
-      $data['tgl'] = [];
       $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
-      for ($i = 0; $i >= -6; $i--) {
-         $tgl = date('Ymd', strtotime($i . ' days', strtotime(date('Y-m-d'))));
-         array_push($data['tgl'], $tgl);
-         $tgl_pesan = date('Y-m-d', strtotime($i . ' days', strtotime(date('Y-m-d'))));
-         $refs_arr = $this->db($this->book)->get_where('ref', "tgl = '" . $tgl_pesan . "' AND id_user = " . $id_user, 'id');
-         $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
-         $refs = "";
-         foreach ($refs_arr as $key => $d) {
-            $refs .= $d . ",";
-         }
-         $refs = rtrim($refs, ',');
-         if (empty($refs)) {
-            $refs = "''"; // If no refs, set to empty string to avoid SQL error
-         }
-         $data['qty'][$tgl]['t'] = 0; // Initialize total sales for the day
-         $sales = 0; // Reset sales count for the day
-         $where = "insertTime LIKE '" . $tgl_pesan . "%' AND ref IN (" . $refs . ")";
 
-         $terjual = $this->db($this->book)->get_cols_where('pesanan', 'id_menu, SUM(qty) as qty', $where, 1, 'id_menu'); //sale
-
-         foreach ($terjual as $d) {
-            $sales += $d['qty'];
-         }
-
-         $data['qty'][$tgl]['t'] = $sales;
+      //saya
+      $refs = "";
+      $refs_arr = [];
+      $tgl_pesan = date('Y-m-d');
+      $refs_arr = $this->db($this->book)->get_where('ref', "tgl = '" . $tgl_pesan . "' AND id_user = " . $id_user . " AND step <> 2", 'id');
+      $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
+      foreach ($refs_arr as $key => $d) {
+         $refs .= $d . ",";
       }
+      $refs = rtrim($refs, ',');
+      if (empty($refs)) {
+         $refs = "''"; // If no refs, set to empty string to avoid SQL error
+      }
+      $where = "ref IN (" . $refs . ")";
+      $data['me'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
+
+      //bukan saya
+      $refs = "";
+      $refs_arr = [];
+      $tgl_pesan = date('Y-m-d');
+      $refs_arr = $this->db($this->book)->get_where('ref', "tgl = '" . $tgl_pesan . "' AND id_user <> " . $id_user . " AND step <> 2", 'id');
+      $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
+      foreach ($refs_arr as $key => $d) {
+         $refs .= $d . ",";
+      }
+      $refs = rtrim($refs, ',');
+      if (empty($refs)) {
+         $refs = "''"; // If no refs, set to empty string to avoid SQL error
+      }
+      $where = "ref IN (" . $refs . ")";
+      $data['xme'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
+
+      //semua sebulan
+      $refs = "";
+      $refs_arr = [];
+      $tgl_pesan = date('Y-m-');
+      $refs_arr = $this->db($this->book)->get_where('ref', "tgl LIKE '" . $tgl_pesan . "%' AND step <> 2", 'id');
+      $refs_arr = array_keys($refs_arr); // Get only the IDs of the refs
+      foreach ($refs_arr as $key => $d) {
+         $refs .= $d . ",";
+      }
+      $refs = rtrim($refs, ',');
+      if (empty($refs)) {
+         $refs = "''"; // If no refs, set to empty string to avoid SQL error
+      }
+      $where = "ref IN (" . $refs . ")";
+      $data['allm'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
+
       $this->view('layout', $layout);
       $this->view(__CLASS__ . "/main", $data);
    }

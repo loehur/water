@@ -141,6 +141,7 @@ class Penjualan extends Controller
 
       $data_ref = $this->db($this->book)->get_where_row('ref', "id = '" . $ref . "'");
       $pelanggan = $data_ref['pelanggan'];
+
       $order = $this->db($this->book)->get_where('pesanan', "ref = '" . $ref . "'", "id_menu");
 
       $sisa_tagihan = 0;

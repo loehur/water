@@ -237,10 +237,6 @@ $target_page_rekap = $uri_segments[$uriCount - 1];
 
             $total_keluar += $data['prepost_cost'];
             ?>
-            <tr>
-              <td>Pre/Post Paid</td>
-              <td class="text-end"><?= number_format($data['prepost_cost']) ?></td>
-            </tr>
             <tr class="table-danger">
               <td><b>Total Pengeluaran</b></td>
               <td class="text-right"><b>Rp<?= number_format($total_keluar) ?></b></td>

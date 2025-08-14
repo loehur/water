@@ -19,7 +19,7 @@
           <b class="text-success"><?= strtoupper($r['nama']) ?></b><br>
           <span class=""><?= date('d M y', strtotime($r['last_order'] . " " . "00:00")) ?></span>
         </td>
-        <td class="text-end pe-1">
+        <td class="text-end pe-2">
           <?php
           $tanggal = $r['last_order'] . ' 00:00:00';
           $tanggal = new DateTime($tanggal);

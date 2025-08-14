@@ -9,11 +9,11 @@
 <div class="row">
   <div class="col text-center border-end">
     <h5>Saya</h5>
-    <h4 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['me'] + $d['xme']) ?></h4>
+    <h4 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['me']) ?></h4>
   </div>
   <div class="col text-center">
     <h5>Tim</h5>
-    <h4 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['me'] + $d['xme']) ?></h4>
+    <h4 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['xme']) ?></h4>
   </div>
 </div>
 <hr>

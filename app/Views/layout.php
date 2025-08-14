@@ -286,7 +286,7 @@ if ($log_mode == 1) {
             </div>
         </aside>
 
-        <div class="content-wrapper pt-2 px-2 bg-white" id="content" style="min-width: <?= URL::MIN_WIDTH ?>px;max-width: <?= URL::MAX_WIDTH ?>px;">
+        <div class="content-wrapper pt-2 px-2 bg-white pb-5" id="content" style="min-width: <?= URL::MIN_WIDTH ?>px;max-width: <?= URL::MAX_WIDTH ?>px;">
             <script src="<?= URL::ASSETS_URL ?>plugins/adminLTE-3.1.0/jquery/jquery.min.js"></script>
             <script src="<?= URL::ASSETS_URL ?>plugins/adminLTE-3.1.0/bootstrap/js/bootstrap.bundle.min.js"></script>
             <script src="<?= URL::ASSETS_URL ?>plugins/bootstrap-5.3/js/bootstrap.bundle.min.js"></script>

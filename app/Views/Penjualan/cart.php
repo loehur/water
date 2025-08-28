@@ -110,7 +110,7 @@
     </table>
     <?php if (count($data['order_pelanggan']) > 0) { ?>
       <div class="alert alert-light">
-        <span class="fw-bold text-danger"><?= strtoupper($nama_pelanggan) ?></span> sudah dibuat!
+        <span class="fw-bold text-danger"><?= strtoupper($nama_pelanggan) ?></span> sudah terinput!
         <br>
         <?php foreach ($data['order_pelanggan'] as $do) { ?>
           <span class="text-purple"><?= $do['qty'] . " " . $data['menu'][$do['id_menu']]['nama'] ?>,&nbsp;</span>

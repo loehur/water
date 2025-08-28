@@ -1,35 +1,45 @@
 <?php
-foreach ($data['ref'] as $key => $r) { ?>
-  <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
-    <div class="col">
-      #<?= $r['id'] ?><br>
-      <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b>
+$mode = $data['mode'];
+?>
+<div class="row mx-0 mb-2 mt-2">
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/="><span class="btn btn-<?= $mode != '=' ? 'outline-' : '' ?>dark w-100">Saya</span></a></div>
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/<>"><span class="btn btn-<?= $mode != '<>' ? 'outline-' : '' ?>dark w-100">Tim</span></a></div>
+</div>
+
+<div style="height: 500px; overflow-y:scroll">
+  <?php
+  foreach ($data['ref'] as $key => $r) { ?>
+    <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
+      <div class="col">
+        #<?= $r['id'] ?><br>
+        <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b>
+      </div>
+      <div class="col text-end">
+        <?= date('d M y, H:i', strtotime($r['tgl'] . " " . $r['jam'] . ":00")) ?><br>
+        <span class="fw-bold">Rp<?= number_format($data['total'][$key]) ?></span><br>
+        <?php
+        switch ($r['step']) {
+          case 1:
+            echo "<span class='badge bg-gradient bg-success'>Lunas</span>";
+            break;
+          case 2:
+            echo "<span class='badge bg-gradient bg-secondary'>Batal</span>";
+            break;
+          case 3:
+            echo "<span class='badge bg-gradient bg-danger'>Piutang</span>";
+            break;
+          case 4:
+            echo "<span class='badge bg-gradient bg-warning'>Pengecekan</span>";
+            break;
+          default:
+            echo "<span class='badge bg-gradient bg-dark'>???</span>";
+            break;
+        }
+        ?>
+      </div>
     </div>
-    <div class="col text-end">
-      <?= date('d M y, H:i', strtotime($r['tgl'] . " " . $r['jam'] . ":00")) ?><br>
-      <span class="fw-bold">Rp<?= number_format($data['total'][$key]) ?></span><br>
-      <?php
-      switch ($r['step']) {
-        case 1:
-          echo "<span class='badge bg-gradient bg-success'>Lunas</span>";
-          break;
-        case 2:
-          echo "<span class='badge bg-gradient bg-secondary'>Batal</span>";
-          break;
-        case 3:
-          echo "<span class='badge bg-gradient bg-danger'>Piutang</span>";
-          break;
-        case 4:
-          echo "<span class='badge bg-gradient bg-warning'>Pengecekan</span>";
-          break;
-        default:
-          echo "<span class='badge bg-gradient bg-dark'>???</span>";
-          break;
-      }
-      ?>
-    </div>
-  </div>
-<?php } ?>
+  <?php } ?>
+</div>
 
 <div class="offcanvas offcanvas-end overflow-hidden" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
   <div class="bg-light bg-gradient mb-2" style="box-shadow: 0px 1px 10px silver;">

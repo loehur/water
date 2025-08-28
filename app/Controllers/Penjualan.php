@@ -36,6 +36,23 @@ class Penjualan extends Controller
       }
 
       $data['ref'] = $cek;
+      if (count($cek) > 0 && $cek['pelanggan'] > 0) {
+         $data['ref_pelanggan'] = $this->db($this->book)->get_where('ref', "id <> '" . $cek['id'] . "' AND tgl = '" . date("Y-m-d") . "' AND pelanggan = " . $cek['pelanggan'], 'id');
+      } else {
+         $data['ref_pelanggan'] = [];
+      }
+
+      $refs = "";
+      if (count($data['ref_pelanggan']) > 0) {
+         $arr_refs = array_keys($data['ref_pelanggan']);
+         foreach ($arr_refs as $r) {
+            $refs .= "'" . $r . "',";
+         }
+         $refs = trim($refs, ',');
+         $data['order_pelanggan'] =  $this->db($this->book)->get_where('pesanan', "ref IN (" . $refs . ")");
+      } else {
+         $data['order_pelanggan'] = [];
+      }
 
       $data['piutang'] = [];
       if (isset($cek['pelanggan']) && $cek['pelanggan'] > 0) {

@@ -8,11 +8,11 @@ class Riwayat extends Controller
       $this->operating_data();
    }
 
-   public function index()
+   public function index($mode = "=")
    {
       $layout = ['title' => 'Riwayat Pesanan'];
       $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
-      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d") . "' AND id_user = " . $id_user . " ORDER BY id DESC", 'id');
+      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d") . "' AND id_user " . $mode . " " . $id_user . " ORDER BY id DESC", 'id');
 
       $order = [];
       $total = [];
@@ -28,6 +28,7 @@ class Riwayat extends Controller
       $data['pelanggan'] = $this->db(0)->get_where('pelanggan', "id_cabang = '" . $this->id_cabang . "'", 'id');
       $data['order'] = $order;
       $data['total'] = $total;
+      $data['mode'] = $mode;
 
       $this->view('layout', $layout);
       $this->view(__CLASS__ . "/main", $data);

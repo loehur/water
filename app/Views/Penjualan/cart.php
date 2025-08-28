@@ -93,11 +93,13 @@
       </div>
     </div>
   <?php } ?>
-<?php } else { ?>
+<?php } else {
+  $nama_pelanggan = $data['pelanggan'][$data['ref']['pelanggan']]['nama'];
+?>
   <div class="px-1 w-100">
     <table class="table table-sm">
       <tr>
-        <td class=""><span class="">Pelanggan<br></span> <span class="fw-bold text-primary"><?= strtoupper($data['pelanggan'][$data['ref']['pelanggan']]['nama']) ?></span></td>
+        <td class=""><span class="">Pelanggan<br></span> <span class="fw-bold text-primary"><?= strtoupper($nama_pelanggan) ?></span></td>
         <td class="text-end">
           <span class="">Galon Titip:</span> <span class="fw-bold text-danger"><?= $data['pelanggan'][$data['ref']['pelanggan']]['titip'] ?></span>
           <?php if (isset($data['piutang'][$data['ref']['pelanggan']])) { ?>
@@ -106,6 +108,15 @@
         </td>
       </tr>
     </table>
+    <?php if (count($data['order_pelanggan']) > 0) { ?>
+      <div class="alert alert-light">
+        Orderan <span class="fw-bold text-danger"><?= strtoupper($nama_pelanggan) ?></span> hari ini sudah dibuat, hati-hati input dobel!
+        <br>
+        <?php foreach ($data['order_pelanggan'] as $do) { ?>
+          <span class="text-purple"><?= $do['qty'] . " " . $data['menu'][$do['id_menu']]['nama'] ?>,&nbsp;</span>
+        <?php } ?>
+      </div>
+    <?php } ?>
   </div>
 <?php } ?>
 

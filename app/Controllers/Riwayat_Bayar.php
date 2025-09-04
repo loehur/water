@@ -11,7 +11,7 @@ class Riwayat_Bayar extends Controller
    public function index()
    {
       $layout = ['title' => 'Riwayat Bayar'];
-      $data['bayar'] = $this->db($this->book)->get_where('kas', "insertTime LIKE '" . date("Y-m-d") . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
+      $data['bayar'] = $this->db($this->book)->get_where('kas', "jenis_mutasi = 1 AND insertTime LIKE '" . date("Y-m-d") . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
       $data['total'] = $this->db($this->book)->sum_col_where('kas', "jumlah", "insertTime LIKE '" . date("Y-m-d") . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
       $data['pelanggan'] = $this->db(0)->get_where('pelanggan', "id_cabang = '" . $this->id_cabang . "'", 'id');
 

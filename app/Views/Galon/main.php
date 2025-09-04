@@ -66,7 +66,16 @@
 <script src="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.js"></script>
 <script>
   $(document).ready(function() {
-
+    $('#dt_tb').dataTable({
+      "bLengthChange": false,
+      "bFilter": true,
+      "bInfo": false,
+      "ordering": false,
+      "bAutoWidth": false,
+      "pageLength": 100,
+      "scrollY": 530,
+      "dom": "lfrti"
+    });
   });
 
   var id_pelanggan = 0;

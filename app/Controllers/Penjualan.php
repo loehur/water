@@ -98,7 +98,7 @@ class Penjualan extends Controller
       $update = $this->db($this->book)->update('ref', "pelanggan = " . $pelanggan, "id = '" . $id . "'");
 
       if ($update['errno'] == 0) {
-         $up = $this->db(0)->update('pelanggan', "titip = " . $qty . ", last_order = '" . date('Y-m-d') . "'", "id = " . $pelanggan);
+         $up = $this->db(0)->update('pelanggan', "titip = " . $qty . ", last_order = '" . date('Ymd') . "'", "id = " . $pelanggan);
          echo $up['errno'] == 0 ? 0 : $up['error'];
       } else {
          echo $update['error'];

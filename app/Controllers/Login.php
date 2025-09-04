@@ -133,17 +133,6 @@ class Login extends Controller
       $otp = $this->model("Enc")->otp($pin);
       $data_user = $this->data('User')->pin_today($username, $otp);
       if ($data_user) {
-         //cek ada cabang
-         $id_outlet = $_POST['outlet'];
-         if (strlen($id_outlet) > 0) {
-            $cek_cb = $this->db(0)->count_where("cabang", "id_cabang = " . $id_outlet);
-            if ($cek_cb > 0) {
-               $up = $this->db(0)->update("user", "id_cabang = " . $id_outlet, "id_user = " . $data_user['id_user']);
-               if ($up['errno'] == 0) {
-                  $data_user = $this->data('User')->pin_today($username, $otp);
-               }
-            }
-         }
          $this->login_parameter($data_user);
          print_r($this->login_ok($username, $no_user));
       } else {

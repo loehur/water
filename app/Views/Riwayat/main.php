@@ -6,7 +6,7 @@ $mode = $data['mode'];
   <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/<>"><span class="btn btn-<?= $mode != '<>' ? 'outline-' : '' ?>dark w-100">Tim</span></a></div>
 </div>
 
-<div style="height: 500px; overflow-y:scroll">
+<div style="height: 550px; overflow-y:scroll">
   <?php
   foreach ($data['ref'] as $key => $r) { ?>
     <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">

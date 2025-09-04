@@ -183,18 +183,6 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col pe-0">
-                                <div class="input-group mb-3">
-                                    <input type="text" name="outlet" class="form-control" placeholder="ID Outlet">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text" style="width:40px">
-                                            <div class="w-100 text-center">
-                                                <span class="fas fa-store-alt"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col">
                                 <div class="input-group mb-3">
                                     <input type="text" name="cap" class="form-control" placeholder="Captcha" required>

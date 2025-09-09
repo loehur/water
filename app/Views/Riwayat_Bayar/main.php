@@ -10,14 +10,26 @@
   $total = 0;
   foreach ($data['bayar'] as $key => $r) {
     $jenis = $r['jenis_transaksi'] ?>
-    <div data-ref="<?= $r['ref'] ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
-      <div class="col">
-        <?= strtoupper($data['pelanggan'][$r['id_client']]['nama']) ?>
+
+    <?php if ($jenis == 1) { ?>
+      <div data-ref="<?= $r['ref'] ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
+        <div class="col">
+          <?= strtoupper($data['pelanggan'][$r['id_client']]['nama']) ?>
+        </div>
+        <div class="col-auto text-end">
+          <?= number_format($r['jumlah']) ?>
+        </div>
       </div>
-      <div class="col-auto text-end">
-        <?= $jenis == 1 ? number_format($r['jumlah']) : number_format(-$r['jumlah']) ?>
+    <?php } else { ?>
+      <div class="row mx-0 border-bottom py-1 text-danger">
+        <div class="col">
+          <?= strtoupper($r['note']) ?>
+        </div>
+        <div class="col-auto text-end">
+          <?= number_format($r['jumlah']) ?>
+        </div>
       </div>
-    </div>
+    <?php } ?>
   <?php } ?>
 </div>
 

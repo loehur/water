@@ -1,20 +1,21 @@
 <div class="row mx-0 mb-2 mt-2">
   <div class="col text-center">
     <?= "Total Hari Ini" ?>
-    <h5 class="fw-bold">Rp<?= number_format($data['total']) ?></h5>
+    <h5 class="fw-bold">Rp<?= number_format($data['total'] - $data['keluar']) ?></h5>
   </div>
 </div>
 
 <div style="height: 550px; overflow-y:scroll">
   <?php
   $total = 0;
-  foreach ($data['bayar'] as $key => $r) { ?>
+  foreach ($data['bayar'] as $key => $r) {
+    $jenis = $r['jenis_transaksi'] ?>
     <div data-ref="<?= $r['ref'] ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
       <div class="col">
         <?= strtoupper($data['pelanggan'][$r['id_client']]['nama']) ?>
       </div>
       <div class="col-auto text-end">
-        <?= number_format($r['jumlah']) ?>
+        <?= $jenis == 1 ? number_format($r['jumlah']) : number_format(-$r['jumlah']) ?>
       </div>
     </div>
   <?php } ?>

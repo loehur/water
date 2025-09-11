@@ -23,7 +23,7 @@
     <?php } else { ?>
       <div class="row mx-0 border-bottom py-1 text-danger">
         <div class="col">
-          <?= $r['note'] ?>
+          <span class="badge bg-dark text-light"><?= $r['note_primary'] ?></span> <?= $r['note'] ?>
         </div>
         <div class="col-auto text-end">
           -<?= number_format($r['jumlah']) ?>

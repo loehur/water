@@ -23,10 +23,10 @@
     <?php } else { ?>
       <div class="row mx-0 border-bottom py-1 text-danger">
         <div class="col">
-          <?= strtoupper($r['note']) ?>
+          <?= $r['note'] ?>
         </div>
         <div class="col-auto text-end">
-          <?= number_format($r['jumlah']) ?>
+          -<?= number_format($r['jumlah']) ?>
         </div>
       </div>
     <?php } ?>

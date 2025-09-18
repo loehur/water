@@ -14,18 +14,22 @@
   <tbody>
     <?php
     foreach ($data['pelanggan'] as $key => $r) { ?>
+
+      <?php
+      $tanggal = $r['last_order'] . ' 00:00:00';
+      $tanggal = new DateTime($tanggal);
+      $sekarang = new DateTime();
+      $beda = $tanggal->diff($sekarang);
+
+      if ($beda->d < 15) continue;
+      ?>
+
       <tr id="row<?= $r['id'] ?>" data-id="<?= $r['id'] ?>" data-pelanggan="<?= strtoupper($r['nama']) ?>" data-titip="<?= $r['titip'] ?>" class="mx-0 py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
         <td>
           <b class="text-success"><?= strtoupper($r['nama']) ?></b><br>
           <span class=""><?= date('d M y', strtotime($r['last_order'] . " " . "00:00")) ?></span>
         </td>
         <td class="text-end pe-2">
-          <?php
-          $tanggal = $r['last_order'] . ' 00:00:00';
-          $tanggal = new DateTime($tanggal);
-          $sekarang = new DateTime();
-          $beda = $tanggal->diff($sekarang);
-          ?>
           <span class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= $r['titip'] ?></span><br>
           <span class="fw-bold text-danger"><?= $beda->d ?> Hari</span>
         </td>

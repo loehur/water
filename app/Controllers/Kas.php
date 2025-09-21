@@ -30,38 +30,16 @@ class Kas extends Controller
 
       $saldo = $kredit - $debit;
 
-      $limit = 10;
-      if ($this->id_privilege == 100) {
-         $limit = 25;
-      }
+      $limit = 25;
 
       $where = $this->wCabang . " AND jenis_mutasi = 2 ORDER BY id DESC LIMIT $limit"; //pengeluaran
       $debit_list = $this->db($this->book)->get_where('kas', $where);
-
-      //KASBON
-      $where = $this->wCabang . " AND jenis_transaksi = 5 AND jenis_mutasi = 2 AND status_mutasi = 1 ORDER BY id DESC LIMIT 25"; //5 kasbon
-      $kasbon = $this->db($_SESSION[URL::SESSID]['user']['book'])->get_where('kas', $where);
-
-      $dataPotong = array();
-      foreach ($kasbon as $k) {
-         $ref = $k['id_kas'];
-         $where = "ref = '" . $ref . "'";
-         $countPotong = $this->db(0)->count_where('gaji_result', $where);
-         if ($countPotong == 1) {
-            $dataPotong[$ref] = 1;
-         } else {
-            $dataPotong[$ref] = 0;
-         }
-      }
-
       $jenis_pengeluaran = $this->db(0)->get_order("item_pengeluaran", "freq DESC");
 
       $this->view('layout', $layout);
       $this->view(__CLASS__ . "/main", [
          'saldo' => $saldo,
          'debit_list' => $debit_list,
-         'kasbon' => $kasbon,
-         'dataPotong' => $dataPotong,
          'pengeluaran_jenis' => $jenis_pengeluaran
       ]);
    }

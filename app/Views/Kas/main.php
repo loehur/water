@@ -3,76 +3,64 @@
   <div class="col p-1">
     <div class="d-flex flex-row">
       <div class="mr-auto">
+        <small>Saldo Kas</small><br>
+        <span class="text-bold text-success">Rp. <?= number_format($kas); ?></span>
+      </div>
+      <div class="pe-2 pb-2 pt-3">
+        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Pengeluaran
+        </button>
+      </div>
+      <div class="p-0 pe-0 pb-2 pt-3">
         <?php if ($_SESSION[URL::SESSID]['user']['id_privilege'] == 100) { ?>
-          <small>Saldo Kas</small><br>
-          <span class="text-bold text-success">Rp. <?= number_format($kas); ?></span>
+          <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+            Penarikan
+          </button>
         <?php } ?>
       </div>
-      <div class="p-0 pr-0 pb-2 pt-2">
-        <div class="btn-group dropdown">
-          <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Menu Kas
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Pengeluaran</a>
-            <?php if ($_SESSION[URL::SESSID]['user']['id_privilege'] == 100) { ?>
-              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal3">Penarikan</a>
-            <?php } ?>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </div>
 
-<div class="row mx-0">
-  <div class="col w-100">
-    <table class="table table-sm m-0">
-      <tr>
-        <th class="pt-2 text-center" colspan="4">
-          Cashflow History
-        </th>
-      </tr>
-      <tbody>
-        <?php
-        $no = 0;
-        foreach ($data['debit_list'] as $a) {
-          $id = $a['id'];
-          $f1 = substr($a['insertTime'], 5, 11);
-          $f2 = $a['note'];
-          $f2b = $a['note_primary'];
-          $f3 = $a['id_user'];
-          $f4 = $a['jumlah'];
-          $f5 = $a['status_mutasi'];
-          $f6 = $a['jenis_transaksi'];
-          $st = $a['status_mutasi'];
-          $cl = $a['id_client'];
-          $metod = $a['metode_mutasi'];
+<div style="height: 550px; overflow-y:scroll">
+  <?php
+  $no = 0;
+  foreach ($data['debit_list'] as $a) {
+    $id = $a['id'];
+    $f1 = substr($a['insertTime'], 5, 11);
+    $f2 = $a['note'];
+    $f2b = $a['note_primary'];
+    $f3 = $a['id_user'];
+    $f4 = $a['jumlah'];
+    $f5 = $a['status_mutasi'];
+    $f6 = $a['jenis_transaksi'];
+    $st = $a['status_mutasi'];
+    $cl = $a['id_client'];
+    $metod = $a['metode_mutasi'];
 
-          $karyawan = '';
-          $client = "";
-          $classTR = '';
-          if ($f6 == 4) {
-            $classTR = 'text-danger';
-          } else if ($f6 == 5) {
-            $classTR = 'text-info';
-          } else {
-            $classTR = 'text-primary';
-          }
+    $karyawan = '';
+    $client = "";
+    $classTR = '';
+    if ($f6 == 4) {
+      $classTR = 'text-danger';
+    } else if ($f6 == 5) {
+      $classTR = 'text-info';
+    } else {
+      $classTR = 'text-primary';
+    }
 
-          $metode = "";
+    if ($f6 == 2 && $_SESSION[URL::SESSID]['user']['id_privilege'] != 100) {
+      continue;
+    }
 
-          echo "<tr>";
-          echo "<td nowrap><small>#" . $id . " " . $f1 . "</small><br><b class='" . $classTR . "'>" . $f2b . "</b> <small>" . $f2 . " " . $client . "</></small></span></td>";
-          echo "<td nowrap class='text-right'><small>" . $metode . "</small> <b><span>" . number_format($f4) . "</span></b><br><small class='text-" . URL::ST_MUTASI[$st][1] . "'>" . URL::ST_MUTASI[$st][0] . "</small></td>";
-          echo "</tr>";
-        }
-        ?>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div>
+    $metode = ""; ?>
+
+    <div class="row border-top">
+      <div class="col" nowrap><small>#<?= $id ?> <?= $f1 ?></small><br><span class='<?= $classTR ?>'><?= $f2b ?></span> <small><?= $f2 ?> <?= $client ?></small></span></div>
+      <div nowrap class='col text-right'><small><?= $metode ?></small> <b><span><?= number_format($f4) ?></span></b><br><small class='text-<?= URL::ST_MUTASI[$st][1] ?>'><?= URL::ST_MUTASI[$st][0] ?></small></div>
+    </div>
+  <?php } ?>
 </div>
 
 <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

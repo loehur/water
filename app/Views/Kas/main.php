@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div style="height: 550px; overflow-y:scroll">
+<div style="height: 550px; overflow-y:scroll" class="pe-3">
   <?php
   $no = 0;
   foreach ($data['debit_list'] as $a) {

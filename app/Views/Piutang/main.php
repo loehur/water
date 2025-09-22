@@ -14,8 +14,8 @@ foreach ($data['data'] as $key => $r) { ?>
         <td class="cekPesanan" style="cursor: pointer;" data-ref="<?= $key ?>">
           <i class="fas fa-ellipsis-v"></i> <span class="text-purple fw-bold"><?= strtoupper($data['pelanggan'][$key]['nama']) ?></span>
         </td>
-        <td>
-          <span class="fw-bold">Rp<?= number_format($r) ?></span> <i class="fas fa-ellipsis-v"></i> Bayar
+        <td class="text-end bayarPiutang" style="cursor: pointer;" data-ref="<?= $key ?>">
+          <span class="fw-bold">Rp<?= number_format($r) ?></span> <i class="fas fa-ellipsis-v"></i>
         </td>
       </tr>
     </tbody>

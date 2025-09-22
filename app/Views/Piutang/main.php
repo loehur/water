@@ -1,15 +1,26 @@
+<link rel="stylesheet" href="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.css" rel="stylesheet" />
+<div class="mt-2"></div>
 <?php
 foreach ($data['data'] as $key => $r) { ?>
-  <div class="row mx-0 border-bottom py-1">
-    <div class="col">
-      <div class="cekPesanan" style="cursor: pointer;" data-ref="<?= $key ?>">
-        Cek <i class="fas fa-ellipsis-v"></i> <span class="text-purple fw-bold"><?= strtoupper($data['pelanggan'][$key]['nama']) ?></span>
-      </div>
-      <div class="text-end bayarPiutang" style="cursor: pointer;" data-ref="<?= $key ?>">
-        <span class="fw-bold">Rp<?= number_format($r) ?></span> <i class="fas fa-ellipsis-v"></i> Bayar
-      </div>
-    </div>
-  </div>
+  <table id="dt_tb" class="w-100 table table-sm mt-2">
+    <thead>
+      <tr>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="cekPesanan" style="cursor: pointer;" data-ref="<?= $key ?>">
+            Cek <i class="fas fa-ellipsis-v"></i> <span class="text-purple fw-bold"><?= strtoupper($data['pelanggan'][$key]['nama']) ?></span>
+          </div>
+          <div class="text-end bayarPiutang" style="cursor: pointer;" data-ref="<?= $key ?>">
+            <span class="fw-bold">Rp<?= number_format($r) ?></span> <i class="fas fa-ellipsis-v"></i> Bayar
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 <?php } ?>
 
 <div class="offcanvas offcanvas-end overflow-hidden" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -44,7 +55,21 @@ foreach ($data['data'] as $key => $r) { ?>
   </div>
 </div>
 
+<script src="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.js"></script>
 <script>
+  $(document).ready(function() {
+    $('#dt_tb').dataTable({
+      "bLengthChange": false,
+      "bFilter": true,
+      "bInfo": false,
+      "ordering": false,
+      "bAutoWidth": false,
+      "pageLength": 100,
+      "scrollY": 530,
+      "dom": "lfrti"
+    });
+  });
+
   $(".cekPesanan").click(function() {
     buka_canvas('offcanvasRight');
     var ref = $(this).attr('data-ref');

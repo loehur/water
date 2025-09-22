@@ -1,6 +1,12 @@
+<?php $day = $data['day']; ?>
+<div class="row mx-0 mb-2 mt-2">
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat_Bayar/index/0"><span class="btn-sm btn btn-<?= $day != '0' ? 'outline-' : '' ?>info w-100">Hari ini</span></a></div>
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat_Bayar/index/1"><span class="btn-sm btn btn-<?= $day != '1' ? 'outline-' : '' ?>info w-100">Kemarin</span></a></div>
+</div>
+
 <div class="row mx-0 mb-2 mt-2">
   <div class="col text-center">
-    <?= "Total Hari Ini" ?>
+    <?= "Total" ?>
     <h5 class="fw-bold">Rp<?= number_format($data['total'] - $data['keluar']) ?></h5>
   </div>
 </div>

@@ -1,9 +1,14 @@
 <?php
 $mode = $data['mode'];
+$day = $data['day'];
 ?>
 <div class="row mx-0 mb-2 mt-2">
-  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/="><span class="btn btn-<?= $mode != '=' ? 'outline-' : '' ?>dark w-100">Saya</span></a></div>
-  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/<>"><span class="btn btn-<?= $mode != '<>' ? 'outline-' : '' ?>dark w-100">Tim</span></a></div>
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/<?= $mode ?>/0"><span class="btn-sm btn btn-<?= $day != '0' ? 'outline-' : '' ?>info w-100">Hari ini</span></a></div>
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/<?= $mode ?>/1"><span class="btn-sm btn btn-<?= $day != '1' ? 'outline-' : '' ?>info w-100">Kemarin</span></a></div>
+</div>
+<div class="row mx-0 mb-2 mt-2">
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/=/<?= $day ?>"><span class="btn-sm btn btn-<?= $mode != '=' ? 'outline-' : '' ?>dark w-100">Saya</span></a></div>
+  <div class="col"><a href="<?= URL::BASE_URL ?>Riwayat/index/<>/<?= $day ?>"><span class="btn-sm btn btn-<?= $mode != '<>' ? 'outline-' : '' ?>dark w-100">Tim</span></a></div>
 </div>
 
 <div style="height: 550px; overflow-y:scroll">

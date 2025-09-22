@@ -8,14 +8,21 @@ class Riwayat_Bayar extends Controller
       $this->operating_data();
    }
 
-   public function index()
+   public function index($day = 0)
    {
       $layout = ['title' => 'Riwayat Bayar'];
-      $data['bayar'] = $this->db($this->book)->get_where('kas', "(jenis_transaksi = 1 OR jenis_transaksi = 4) AND insertTime LIKE '" . date("Y-m-d") . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
-      $data['total'] = $this->db($this->book)->sum_col_where('kas', "jumlah", "jenis_transaksi = 1 AND insertTime LIKE '" . date("Y-m-d") . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
-      $data['keluar'] = $this->db($this->book)->sum_col_where('kas', "jumlah", "jenis_transaksi = 4 AND insertTime LIKE '" . date("Y-m-d") . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
+      if ($day == 0) {
+         $tgl = date("Y-m-d");
+      } else {
+         $tgl = date("Y-m-d", strtotime("-1 day"));
+      }
+
+      $data['bayar'] = $this->db($this->book)->get_where('kas', "(jenis_transaksi = 1 OR jenis_transaksi = 4) AND insertTime LIKE '" . $tgl . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
+      $data['total'] = $this->db($this->book)->sum_col_where('kas', "jumlah", "jenis_transaksi = 1 AND insertTime LIKE '" . $tgl . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
+      $data['keluar'] = $this->db($this->book)->sum_col_where('kas', "jumlah", "jenis_transaksi = 4 AND insertTime LIKE '" . $tgl . "%' AND metode_mutasi = 1 AND status_mutasi <> 2 AND id_cabang = '" . $this->id_cabang . "'");
       $data['pelanggan'] = $this->db(0)->get_where('pelanggan', "id_cabang = '" . $this->id_cabang . "'", 'id');
 
+      $data['day'] = $day;
       $this->view('layout', $layout);
       $this->view(__CLASS__ . "/main", $data);
    }

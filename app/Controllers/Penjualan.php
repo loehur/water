@@ -250,6 +250,11 @@ class Penjualan extends Controller
                      $this->db(0)->update("menu_item", "freq = freq - 1", "id = " . $p['id']);
                      $this->db(0)->update("menu_kategori", "freq = freq - 1", "id = " . $p['id_kat']);
 
+                     //hapus juga riwayat bayar
+                     for ($i = $this->book; $i <= (date('Y') + 1); $i++) {
+                        $this->db($i)->delete_where("kas", "ref = '" . $cek_menu['ref'] . "'");
+                     }
+
                      $del = $this->db($this->book)->delete_where("ref", "id = '" . $cek_menu['ref'] . "'");
                      echo $del['errno'] == 0 ? 1 : $del['error'];
                   } else {
@@ -280,7 +285,7 @@ class Penjualan extends Controller
             exit();
          }
 
-         $ref = date('mdHis') . $this->id_cabang;
+         $ref = (date('Y') - 2024) . date('mdHis') . $this->id_cabang;
          $cols = "id, nomor, tgl, jam, id_cabang, id_user";
          $vals = "'" . $ref . "'," . $nomor . ",'" . date('Y-m-d') . "','" . date("H:i") . "'," . $this->id_cabang . ", " . $id_user;
          $in = $this->db($this->book)->insertCols("ref", $cols, $vals);

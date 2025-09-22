@@ -22,7 +22,7 @@ class Penjualan extends Controller
    {
       $viewData = __CLASS__ . '/cart';
       $data['nomor'] = $nomor;
-      $data['pelanggan'] = $this->db(0)->get("pelanggan", 'id');
+      $data['pelanggan'] = $this->db(0)->get_where("pelanggan", $this->wCabang . " ORDER BY last_order DESC", 'id');
       $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
 
       $cek = $this->db($this->book)->get_where_row('ref', "id_user = " . $id_user . " AND nomor = " . $nomor . " AND step = 0");

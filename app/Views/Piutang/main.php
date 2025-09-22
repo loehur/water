@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.css" rel="stylesheet" />
 <div class="mt-2"></div>
-<?php
-foreach ($data['data'] as $key => $r) { ?>
-  <table id="dt_tb" class="w-100 table table-sm mt-2">
-    <thead>
-      <tr>
-        <td></td>
-        <td></td>
-      </tr>
-    </thead>
-    <tbody>
+<table id="dt_tb" class="w-100 table table-sm mt-2">
+  <thead>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    foreach ($data['data'] as $key => $r) { ?>
       <tr>
         <td class="cekPesanan" style="cursor: pointer;" data-ref="<?= $key ?>">
           <i class="fas fa-ellipsis-v"></i> <span class="text-purple fw-bold"><?= strtoupper($data['pelanggan'][$key]['nama']) ?></span>
@@ -18,9 +18,9 @@ foreach ($data['data'] as $key => $r) { ?>
           <span class="fw-bold">Rp<?= number_format($r) ?></span> <i class="fas fa-ellipsis-v"></i>
         </td>
       </tr>
-    </tbody>
-  </table>
-<?php } ?>
+    <?php } ?>
+  </tbody>
+</table>
 
 <div class="offcanvas offcanvas-end overflow-hidden" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
   <div class="bg-light bg-gradient mb-2" style="box-shadow: 0px 1px 10px silver;">

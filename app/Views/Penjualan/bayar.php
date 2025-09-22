@@ -30,8 +30,8 @@ foreach ($data['bayar'] as $b) {
   <div class="w-100 mt-3">
     <div class="d-flex justify-content-center">
       <div class="px-3 border-end">
-        <div class="text-center">Dibayar</div>
-        <div class="text-center fs-5 fw-bold" x-text="number_format(total_bayar)"></div>
+        <div class="text-end">Dibayar</div>
+        <div class="text-end fs-5 fw-bold" x-text="number_format(total_bayar)"></div>
       </div>
       <div class="px-3">
         <div class="text-end">Kembalian</div>

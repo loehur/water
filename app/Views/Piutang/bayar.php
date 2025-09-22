@@ -31,35 +31,32 @@ $data_tgl = [];
   </div>
   <div class="w-100 mt-3">
     <div class="text-center">Input Jumlah Bayar</div>
-    <div class="text-center"><input id="inBayar" x-on:keyup="kembalian" class="border-top-0 border-start-0 border-end-0 border-bottom fs-2 text-success w-100 text-center" type="number"></div>
-  </div>
-  <div class="w-100 mt-3">
-    <div class="text-center">Dibayar</div>
-    <div class="text-center fs-5 fw-bold" x-text="dibayar"></div>
+    <div class="text-center"><input id="inBayar" x-model="total_bayar" x-on:keyup="kembalian" class="border-top-0 border-start-0 border-end-0 border-bottom fs-2 text-success w-100 text-center" type="number"></div>
   </div>
   <div class="w-100 mt-3">
     <div class="d-flex justify-content-center">
       <div class="px-3 border-end">
+        <div class="text-end">Dibayar</div>
+        <div class="text-end fs-5 fw-bold" x-text="dibayar"></div>
+      </div>
+      <div class="px-3">
         <div class="text-end">Kembalian</div>
         <div class="text-end fs-5 fw-bold text-danger" x-text="jumKembali"></div>
       </div>
-      <div class="px-3">
-        <div class="text-center">Metode Bayar</div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="1" name="metode" id="flexRadioDefault2" checked>
-          <label class="form-check-label" for="flexRadioDefault2">
-            CASH
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" value="2" name="metode" id="flexRadioDefault1">
-          <label class="form-check-label" for="flexRadioDefault1">
-            QRIS
-          </label>
-        </div>
-      </div>
     </div>
   </div>
+
+  <div class="w-100 mt-3 row mx-0 row-cols-2 px-3">
+    <?php foreach (URL::METOD_BAYAR as $key => $value) { ?>
+      <div class="form-check col">
+        <input class="form-check-input" type="radio" value="<?= $key ?>" x-model="metodePilih" x-on:change="metodeBayar" name="metode" id="option<?= $key ?>">
+        <label class="form-check-label" for="option<?= $key ?>">
+          <?= strtoupper($value) ?>
+        </label>
+      </div>
+    <?php } ?>
+  </div>
+
   <div class="w-100 mt-4">
     <div class="text-center fs-5 fw-bold">
       <span class="btn btn-success w-100 bg-gradient rounded-0" x-on:click="bayarOK">Bayar</span>
@@ -76,6 +73,8 @@ $data_tgl = [];
       dibayar: '0',
       jumBayar: 0,
       cekbokArray: <?= json_encode($data_tgl) ?>,
+      metodePilih: 1,
+      total_bayar: '',
 
       cek() {
         this.bill = 0;
@@ -88,8 +87,15 @@ $data_tgl = [];
         this.showBill = this.number_format(this.bill);
       },
 
+      metodeBayar() {
+        if (this.metodePilih != 1) {
+          this.total_bayar = this.bill
+          this.kembalian();
+        }
+      },
+
       kembalian() {
-        var jumBayar = parseInt($("#inBayar").val());
+        var jumBayar = this.total_bayar;
         this.jumBayar = jumBayar;
 
         var jumKembali = jumBayar - this.bill;

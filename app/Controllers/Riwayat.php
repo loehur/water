@@ -12,11 +12,13 @@ class Riwayat extends Controller
    {
       $layout = ['title' => 'Riwayat Pesanan'];
       $id_user = $_SESSION[URL::SESSID]['user']['id_user'];
+
       if ($day == 0) {
-         $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d") . "' AND id_user " . $mode . " " . $id_user . " ORDER BY id DESC", 'id');
+         $tgl = date("Y-m-d");
       } else {
-         $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . date("Y-m-d", strtotime('-1 day')) . "' AND id_user " . $mode . " " . $id_user . " ORDER BY id DESC", 'id');
+         $tgl = date("Y-m-d", strtotime('-1 day'));
       }
+      $data['ref'] = $this->db($this->book)->get_where('ref', "step <> 0 AND tgl = '" . $tgl . "' AND id_user " . $mode . " " . $id_user . " ORDER BY id DESC", 'id');
 
       $order = [];
       $total = [];

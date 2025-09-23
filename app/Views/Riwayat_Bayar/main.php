@@ -20,7 +20,7 @@
     <?php if ($jenis == 1) { ?>
       <div data-ref="<?= $r['ref'] ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
         <div class="col">
-          <?= strtoupper($data['pelanggan'][$r['id_client']]['nama']) ?> <small><span class="text-secondary"><?= $r['note_primary'] ?>#<?= $r['note'] ?></span></small>
+          <?= strtoupper($data['pelanggan'][$r['id_client']]['nama']) ?> <small><span class="text-secondary"><?= $r['note_primary'] ?> <?= $r['note'] ?></span></small>
         </div>
         <div class="col-auto text-end">
           <?= number_format($r['jumlah']) ?>

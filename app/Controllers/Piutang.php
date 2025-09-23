@@ -165,8 +165,8 @@ class Piutang extends Controller
                      $jumBayar = 0;
                   }
 
-                  $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali, ref_bayar, id_client";
-                  $vals = $this->id_cabang . ",1,1,'" . $ref . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar[$ref] . "," . $this->id_user . "," . $jumlah_bayar[$ref] . ",0,'" . $ref_bayar . "'," . $pelanggan;
+                  $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali, ref_bayar, id_client, note_primary, note";
+                  $vals = $this->id_cabang . ",1,1,'" . $ref . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar[$ref] . "," . $this->id_user . "," . $jumlah_bayar[$ref] . ",0,'" . $ref_bayar . "'," . $pelanggan . ",'P','" . $tgl . "'";
                   $in = $this->db($this->book)->insertCols("kas", $cols, $vals);
 
                   if ($in['errno'] == 0) {

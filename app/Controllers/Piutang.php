@@ -121,7 +121,7 @@ class Piutang extends Controller
          exit();
       }
       if (count($p['list_tgl']) > 0) {
-         $ref_bayar = date('mdHis') . $this->id_cabang;
+         $ref_bayar = (date('Y') - 2024) . date('mdHis') . $this->id_cabang;
          $jumBayar = $p['jumBayar'];
          $metode = $p['metode'];
          if ($metode == 1 || $this->id_privilege == 100) {

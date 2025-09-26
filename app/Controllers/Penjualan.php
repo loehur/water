@@ -147,6 +147,7 @@ class Penjualan extends Controller
       $ref = $_POST['ref'];
       $uang_diterima = $_POST['dibayar'];
       $metode = $_POST['metode'];
+      $note = isset($_POST['catatan']) ? $_POST['catatan'] : '';
 
       if ($metode == 1) {
          $st_mutasi = 1;
@@ -190,8 +191,8 @@ class Penjualan extends Controller
             $jumlah_bayar = $uang_diterima;
          }
 
-         $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali, id_client";
-         $vals = $this->id_cabang . ",1,1,'" . $ref . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar . "," . $this->id_user . "," . $uang_diterima . "," . $kembali . "," . $pelanggan;
+         $cols = "id_cabang, jenis_mutasi, jenis_transaksi, ref, metode_mutasi, status_mutasi, jumlah, id_user, dibayar, kembali, id_client, note";
+         $vals = $this->id_cabang . ",1,1,'" . $ref . "'," . $metode . "," . $st_mutasi . "," . $jumlah_bayar . "," . $this->id_user . "," . $uang_diterima . "," . $kembali . "," . $pelanggan . ",'" . $note . "'";
          $in = $this->db($this->book)->insertCols("kas", $cols, $vals);
          if ($in['errno'] == 0) {
             if ($uang_diterima >= $sisa_tagihan) {

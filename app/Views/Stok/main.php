@@ -30,7 +30,7 @@
 <hr>
 <div class="row mt-4">
   <div class="col text-center">
-    <h4 class="text-info">Bulan Ini</h4>
+    <h4 class="text-success">Bulan Ini</h4>
     <h3 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allm']) ?></h3>
   </div>
 </div>

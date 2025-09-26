@@ -147,7 +147,7 @@ class Penjualan extends Controller
       $ref = $_POST['ref'];
       $uang_diterima = $_POST['dibayar'];
       $metode = $_POST['metode'];
-      $note = isset($_POST['catatan']) ? $_POST['catatan'] : '';
+      $note = isset($_POST['note']) ? $_POST['note'] : '';
 
       if ($metode == 1) {
          $st_mutasi = 1;

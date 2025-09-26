@@ -85,7 +85,7 @@ foreach ($data['bayar'] as $b) {
 
       bayarOK() {
         let metode = $('input[name="metode"]:checked').val();
-        let note = $('input[name="catatan"]').val();
+        let note = $('input#name="catatan"]').val();
 
         if (this.total_bayar <= 0) {
           alert('Jumlah bayar harus lebih besar dari 0');

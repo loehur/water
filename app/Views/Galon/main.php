@@ -16,22 +16,25 @@
     foreach ($data['pelanggan'] as $key => $r) { ?>
 
       <?php
-      $tanggal = $r['last_order'] . ' 00:00:00';
-      $tanggal = new DateTime($tanggal);
-      $sekarang = new DateTime();
-      $beda = $tanggal->diff($sekarang);
+      $t1 = date_create(date('Y-m-d', strtotime($r['last_order'])));
+      $t2 = date_create(date("Y-m-d"));
 
-      if ($beda->d < 15) continue;
+      $diff = date_diff($t1, $t2);
+      $beda = $diff->format('%R%a') + 0;
+
+      if ($beda < 15) {
+        continue;
+      }
       ?>
 
       <tr id="row<?= $r['id'] ?>" data-id="<?= $r['id'] ?>" data-pelanggan="<?= strtoupper($r['nama']) ?>" data-titip="<?= $r['titip'] ?>" class="mx-0 py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
         <td>
           <b class="text-success"><?= strtoupper($r['nama']) ?></b><br>
-          <span class=""><?= date('d M y', strtotime($r['last_order'] . " " . "00:00")) ?></span>
+          <span class=""><?= date('d M y', strtotime($r['last_order'])) ?></span>
         </td>
         <td class="text-end pe-2">
           <span class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= $r['titip'] ?></span><br>
-          <span class="fw-bold text-danger"><?= $beda->d ?> Hari</span>
+          <span class="fw-bold text-danger"><?= $beda ?> Hari</span>
         </td>
       </tr>
     <?php } ?>

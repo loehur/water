@@ -1,21 +1,31 @@
 <link rel="stylesheet" href="<?= URL::ASSETS_URL ?>plugins/DataTables/datatables.min.css" rel="stylesheet" />
-<div class="mt-2"></div>
+<pre>
+  <?php
+  $tgl_order = $data['tgl_order'];
+  $t2 = date_create(date("Y-m-d"));
+  ?>
+</pre>
 <table id="dt_tb" class="w-100 table table-sm mt-2">
   <thead>
     <tr>
-      <td></td>
-      <td></td>
+      <td>Nama</td>
+      <td>H</td>
+      <td class="text-end">Jumlah</td>
     </tr>
   </thead>
   <tbody>
     <?php
-    foreach ($data['data'] as $key => $r) { ?>
+    foreach ($data['data'] as $key => $r) {
+      $t1 = date_create(min($tgl_order[$key]));
+      $diff = date_diff($t1, $t2);
+      $tempo = $diff->format('%R%a') + 0; ?>
       <tr>
         <td class="cekPesanan" style="cursor: pointer;" data-ref="<?= $key ?>">
-          <i class="fas fa-ellipsis-v"></i> <span class="text-purple fw-bold"><?= strtoupper($data['pelanggan'][$key]['nama']) ?></span>
+          <span class="text-purple fw-bold"><?= strtoupper($data['pelanggan'][$key]['nama']) ?></span>
         </td>
+        <td><?= $tempo ?></td>
         <td class="text-end bayarPiutang pe-2" style="cursor: pointer;" data-ref="<?= $key ?>">
-          <span class="fw-bold">Rp<?= number_format($r) ?></span> <i class="fas fa-ellipsis-v"></i>
+          <span class="fw-bold">Rp<?= number_format($r) ?></span><br>
         </td>
       </tr>
     <?php } ?>
@@ -61,7 +71,10 @@
       "bLengthChange": false,
       "bFilter": true,
       "bInfo": false,
-      "ordering": false,
+      "ordering": true,
+      "order": [
+        [1, 'desc']
+      ],
       "bAutoWidth": false,
       "pageLength": 100,
       "scrollY": 530,

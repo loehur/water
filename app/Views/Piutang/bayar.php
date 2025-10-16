@@ -5,7 +5,11 @@ $total = 0;
 $data_tgl = [];
 ?>
 
-<div x-data="dataBill">
+<div class="mb-3 mt-2 border-bottom">
+  Pak/Bu. <span class="fw-bold"><?= strtoupper($data['nama_pelanggan']) ?></span>
+</div>
+
+<div x-data="dataBill" class="px-1">
   <?php foreach ($data['order'] as $key => $d) {
     array_push($data_tgl, $key);
     $total += $data['total'][$key]; ?>

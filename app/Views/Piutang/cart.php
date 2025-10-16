@@ -1,5 +1,8 @@
-<div class="accordion mt-1 px-0 mx-0" id="accordionExample">
+<div class="mb-2 mt-2">
+  Pak/Bu. <span class="fw-bold"><?= strtoupper($data['nama_pelanggan']) ?></span>
+</div>
 
+<div class="accordion mt-1 px-0 mx-0" id="accordionExample">
   <?php foreach ($data['order'] as $key => $d) { ?>
     <div class="accordion-item">
       <h2 class="accordion-header">

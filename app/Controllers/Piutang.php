@@ -18,7 +18,11 @@ class Piutang extends Controller
       $order = [];
       $data_ = [];
 
+      $tgl_order = [];
       foreach ($data['ref'] as $key => $r) {
+         if (!isset($tgl_order[$r['pelanggan']])) $tgl_order[$r['pelanggan']] = [];
+         array_push($tgl_order[$r['pelanggan']], $r['tgl']);
+
          $order[$key] = $this->db($this->book)->get_where('pesanan', "ref = '" . $key . "'");
          foreach ($order[$key] as $dk) {
             $subTotal = ($dk['harga'] * $dk['qty']) - $dk['diskon'];
@@ -35,6 +39,7 @@ class Piutang extends Controller
          }
       }
 
+      $data['tgl_order'] = $tgl_order;
       $data['order'] = $order;
       $data['data'] = $data_;
 
@@ -45,6 +50,7 @@ class Piutang extends Controller
    public function cart($pelanggan = 0)
    {
       $viewData = __CLASS__ . '/cart';
+      $data_pelanggan = $this->db(0)->get_where("pelanggan", "id = " . $pelanggan, "id");
       $data['order'] = $this->db($this->book)->get_where('ref', "pelanggan = " . $pelanggan . " AND step = 3", "tgl", 1);
       $data['order_ref'] = $this->db($this->book)->get_where('ref', "pelanggan = " . $pelanggan . " AND step = 3", "id");
 
@@ -65,10 +71,9 @@ class Piutang extends Controller
          }
       }
 
-
-
       $data['total'] = $total;
       $data['pelanggan'] = $pelanggan;
+      $data['nama_pelanggan'] = $data_pelanggan[$pelanggan]['nama'];
       $this->view($viewData, $data);
    }
 
@@ -89,6 +94,7 @@ class Piutang extends Controller
    function cek_bayar($pelanggan)
    {
       $viewData = __CLASS__ . '/bayar';
+      $data_pelanggan = $this->db(0)->get_where("pelanggan", "id = " . $pelanggan, "id");
       $data['order'] = $this->db($this->book)->get_where('ref', "pelanggan = " . $pelanggan . " AND step = 3", "tgl", 1);
       $data['order_ref'] = $this->db($this->book)->get_where('ref', "pelanggan = " . $pelanggan . " AND step = 3", "id");
 
@@ -110,6 +116,7 @@ class Piutang extends Controller
 
       $data['total'] = $total;
       $data['pelanggan'] = $pelanggan;
+      $data['nama_pelanggan'] = $data_pelanggan[$pelanggan]['nama'];
       $this->view($viewData, $data);
    }
 

@@ -22,7 +22,7 @@
       $diff = date_diff($t1, $t2);
       $beda = $diff->format('%R%a') + 0;
 
-      if ($beda < 15) {
+      if ($beda < 1) {
         continue;
       }
       ?>

@@ -1,4 +1,7 @@
-<?php foreach ($data['menu'] as $dk) { ?>
+<?php foreach ($data['menu'] as $dk) {
+  if ($dk['en'] == 0) {
+    continue;
+  } ?>
   <div class="d-flex flex-row border-bottom justify-content-between">
     <div class="py-1">
       <span class="text-success fw-bold"><?= $dk['nama'] ?></span><br>

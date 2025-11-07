@@ -54,3 +54,39 @@
     </tr>
   <?php } ?>
 </table>
+
+
+<?php
+$ref = $data['ref'];
+if ($ref['v'] == 0 || $ref['v'] == 2) { ?>
+  <span data-ref="<?= $ref['id'] ?>" data-v="1" class="btn btn-success w-100 set">Set Car</span>
+<?php } else { ?>
+  <span data-ref="<?= $ref['id'] ?>" data-v="2" class="btn btn-primary w-100 set">Set Bike</span>
+<?php } ?>
+
+<script>
+  $(".set").click(function() {
+    var ref = $(this).attr('data-ref');
+    var v = $(this).attr('data-v');
+
+    $(this).fadeOut('fast');
+
+    $.ajax({
+      url: "<?= URL::BASE_URL ?>Riwayat/vehicle",
+      data: {
+        ref: ref,
+        v: v,
+      },
+      type: "POST",
+      success: function(res) {
+        if (res == 1) {
+          $("span#" + ref).html("<span class='badge bg-gradient bg-success'>Car</span>");
+        } else if (res == 2) {
+          $("span#" + ref).html("<span class='badge bg-gradient bg-primary'>Bike</span>");
+        } else {
+          $("span#" + ref).html("<span class='badge bg-gradient bg-danger'>" + res + "</span>");
+        }
+      },
+    });
+  })
+</script>

@@ -45,8 +45,27 @@ class Riwayat extends Controller
    {
       $viewData = __CLASS__ . '/cart';
       $data['menu'] = $_SESSION[URL::SESSID]['menu'];
+      $data['ref'] = $this->db($this->book)->get_where_row('ref', "id = '" . $ref . "'");
       $data['order'] = $this->db($this->book)->get_where('pesanan', "ref = '" . $ref . "'", "id_menu");
       $data['bayar'] = $this->db($this->book)->get_where('kas', "ref = '" . $ref . "' AND status_mutasi <> 2");
       $this->view($viewData, $data);
+   }
+
+   function vehicle()
+   {
+      $ref = $_POST['ref'];
+      $v = $_POST['v'];
+
+      $up_ref = $this->db($this->book)->update('ref', "v = " . $v, "id = '" . $ref . "'");
+      if ($up_ref['errno'] == 0) {
+         $up_p = $this->db($this->book)->update('pesanan', "v = " . $v, "ref = '" . $ref . "'");
+         if ($up_p['errno'] == 0) {
+            echo $v;
+         } else {
+            echo $up_p['errno'];
+         }
+      } else {
+         echo $up_ref['errno'];
+      }
    }
 }

@@ -17,7 +17,22 @@ $day = $data['day'];
     <div data-ref="<?= $key ?>" class="row mx-0 border-bottom py-1 cekPesanan" style="cursor: pointer;" aria-controls="offcanvasRight">
       <div class="col">
         #<?= $r['id'] ?><br>
-        <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b>
+        <b class="text-purple"><?= strtoupper($data['pelanggan'][$r['pelanggan']]['nama']) ?></b><br>
+        <span id="<?= $r['id'] ?>">
+          <?php
+          $vhv = $r['v'];
+          switch ($vhv) {
+            case 1:
+              echo "<span class='badge bg-gradient bg-success'>Car</span>";
+              break;
+            case 2:
+              echo "<span class='badge bg-gradient bg-primary'>Bike</span>";
+              break;
+            default:
+              break;
+          }
+          ?>
+        </span>
       </div>
       <div class="col text-end">
         <?= date('d M y, H:i', strtotime($r['tgl'] . " " . $r['jam'] . ":00")) ?><br>

@@ -54,6 +54,8 @@ class Kas extends Controller
 
       if ($this->id_privilege == 100) {
          $status_mutasi = 1;
+      } else {
+         $status_mutasi = 0;
       }
 
       $cols = 'id_cabang, jenis_mutasi, jenis_transaksi, metode_mutasi, note, status_mutasi, jumlah, id_user, id_client, note_primary';

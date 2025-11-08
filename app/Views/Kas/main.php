@@ -12,13 +12,10 @@
         </button>
       </div>
       <div class="p-0 pe-0 pb-2 pt-3">
-        <?php if ($_SESSION[URL::SESSID]['user']['id_privilege'] == 100) { ?>
-          <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal3">
-            Penarikan
-          </button>
-        <?php } ?>
+        <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+          Penarikan
+        </button>
       </div>
-
     </div>
   </div>
 </div>
@@ -48,10 +45,6 @@
       $classTR = 'text-info';
     } else {
       $classTR = 'text-primary';
-    }
-
-    if ($f6 == 2 && $_SESSION[URL::SESSID]['user']['id_privilege'] != 100) {
-      continue;
     }
 
     $metode = ""; ?>

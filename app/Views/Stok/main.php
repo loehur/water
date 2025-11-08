@@ -1,36 +1,26 @@
 <?php $d = $data; ?>
-
 <div class="row mt-2 mx-1 py-2">
-  <div class="col text-center">
-    <h4 class="text-purple">Hari Ini</h4>
-    <h3 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['me'] + $d['xme']) ?></h3>
-  </div>
-</div>
-<div class="row">
   <div class="col text-center border-end">
-    <h5>Saya</h5>
-    <h4 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['me']) ?></h4>
+    <h5 class="text-purple">Hari Ini</h5>
+    <h5 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['alltoday']) ?></h5>
+    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allv_t']['bike']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allv_t']['car']) ?></span>
   </div>
   <div class="col text-center">
-    <h5>Tim</h5>
-    <h4 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['xme']) ?></h4>
-  </div>
-</div>
-<hr>
-<div class="row mt-4">
-  <div class="col text-center">
-    <h4 class="text-success">Bulan Ini</h4>
-    <h3 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allm']) ?></h3>
+    <h5 class="text-info">Kemarin</h5>
+    <h5 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allyesterday']) ?></h5>
+    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allv_y']['bike']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allv_y']['car']) ?></span>
   </div>
 </div>
 <hr>
-<div class="row mt-4">
+<div class="row mt-2">
   <div class="col text-center">
-    <h4 class="text-info">Kemarin</h4>
-    <h3 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allyesterday']) ?></h3>
+    <h5 class="text-purple">Bulan Ini</h5>
+    <h5 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allm']) ?></h5>
+    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allmv_t']['bike']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allmv_t']['car']) ?></span>
   </div>
   <div class="col text-center">
-    <h4 class="text-info">Bulan Lalu</h4>
-    <h3 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allml']) ?></h3>
+    <h5 class="text-info">Bulan Lalu</h5>
+    <h5 class="fw-bold"><i class="fa-light fa-bottle-water"></i> <?= number_format($d['allml']) ?></h5>
+    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allmv_y']['bike']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allmv_y']['car']) ?></span>
   </div>
 </div>

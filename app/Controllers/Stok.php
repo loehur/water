@@ -60,7 +60,7 @@ class Stok extends Controller
       }
       $where = "ref IN (" . $refs . ")";
       $data['alltoday'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
-      $data['allv_t'] = $this->db($this->book)->get_cols_where('pesanan', 'SUM(v = 1) as car, SUM(v = 2) as bike', $where, 0);
+      $data['allv_t'] = $this->db($this->book)->get_cols_where('pesanan', 'v, SUM(qty) as qty', $where . " GROUP BY v", 1, 'v');
 
       //semua kemarin
       $refs = "";
@@ -77,7 +77,7 @@ class Stok extends Controller
       }
       $where = "ref IN (" . $refs . ")";
       $data['allyesterday'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
-      $data['allv_y'] = $this->db($this->book)->get_cols_where('pesanan', 'SUM(v = 1) as car, SUM(v = 2) as bike', $where, 0);
+      $data['allv_y'] = $this->db($this->book)->get_cols_where('pesanan', 'v, SUM(qty) as qty', $where . " GROUP BY v", 1, 'v');
 
       //semua sebulan
       $refs = "";
@@ -94,7 +94,7 @@ class Stok extends Controller
       }
       $where = "ref IN (" . $refs . ")";
       $data['allm'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
-      $data['allmv_t'] = $this->db($this->book)->get_cols_where('pesanan', 'SUM(v = 1) as car, SUM(v = 2) as bike', $where, 0);
+      $data['allmv_t'] = $this->db($this->book)->get_cols_where('pesanan', 'v, SUM(qty) as qty', $where . " GROUP BY v", 1, 'v');
 
       //semua sebulan lalu
       $refs = "";
@@ -111,7 +111,7 @@ class Stok extends Controller
       }
       $where = "ref IN (" . $refs . ")";
       $data['allml'] = $this->db($this->book)->sum_col_where('pesanan', 'qty', $where);
-      $data['allmv_y'] = $this->db($this->book)->get_cols_where('pesanan', 'SUM(v = 1) as car, SUM(v = 2) as bike', $where, 0);
+      $data['allmv_y'] = $this->db($this->book)->get_cols_where('pesanan', 'v, SUM(qty) as qty', $where . " GROUP BY v", 1, 'v');
 
       $this->view('layout', $layout);
       $this->view(__CLASS__ . "/main", $data);

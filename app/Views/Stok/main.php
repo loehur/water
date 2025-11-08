@@ -10,7 +10,7 @@
     if (!isset($data['allv_t'][2])) {
       $data['allv_t'][2] = ['qty' => 0];
     } ?>
-    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allv_t'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allv_t'][2]['qty']) ?></span>
+    <span class="text-primary"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allv_t'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allv_t'][2]['qty']) ?></span>
   </div>
   <div class="col text-center">
     <h5 class="text-info">Kemarin</h5>
@@ -22,7 +22,7 @@
     if (!isset($data['allv_y'][2])) {
       $data['allv_y'][2] = ['qty' => 0];
     } ?>
-    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allv_y'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allv_y'][2]['qty']) ?></span>
+    <span class="text-primary"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allv_y'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allv_y'][2]['qty']) ?></span>
   </div>
 </div>
 <hr>
@@ -37,7 +37,7 @@
     if (!isset($data['allmv_t'][2])) {
       $data['allmv_t'][2] = ['qty' => 0];
     } ?>
-    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allmv_t'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allmv_t'][2]['qty']) ?></span>
+    <span class="text-primary"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allmv_t'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allmv_t'][2]['qty']) ?></span>
   </div>
   <div class="col text-center">
     <h5 class="text-info">Bulan Lalu</h5>
@@ -49,6 +49,6 @@
     if (!isset($data['allmv_y'][2])) {
       $data['allmv_y'][2] = ['qty' => 0];
     } ?>
-    <span class="text-primary"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allmv_y'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allmv_y'][2]['qty']) ?></span>
+    <span class="text-primary"><i class="fa-light fa-truck-pickup"></i> <?= number_format($data['allmv_y'][1]['qty']) ?>,</span> <span class="text-success"><i class="fa-light fa-motorcycle"></i> <?= number_format($data['allmv_y'][2]['qty']) ?></span>
   </div>
 </div>

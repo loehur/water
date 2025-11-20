@@ -43,7 +43,7 @@ foreach ($data['bayar'] as $b) {
   <div class="w-100 mt-3 row mx-0 row-cols-2 px-3">
     <?php foreach (URL::METOD_BAYAR as $key => $value) { ?>
       <div class="form-check col">
-        <input class="form-check-input" type="radio" value="<?= $key ?>" x-model="metodePilih" x-on:change="metodeBayar" name="metode" id="option<?= $key ?>">
+        <input class="form-check-input" type="radio" value="<?= $key ?>" x-model="metodePilih" name="metode" id="option<?= $key ?>">
         <label class="form-check-label" for="option<?= $key ?>">
           <?= strtoupper($value) ?>
         </label>
@@ -76,12 +76,6 @@ foreach ($data['bayar'] as $b) {
       bill: parseInt(<?= $total ?>),
       total_bayar: parseInt(<?= $total ?>),
       kembalian: 0,
-
-      metodeBayar() {
-        if (this.metodePilih != 1) {
-          this.total_bayar = parseInt(<?= $total ?>)
-        }
-      },
 
       bayarOK() {
         let metode = $('input[name="metode"]:checked').val();

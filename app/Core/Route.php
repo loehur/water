@@ -4,7 +4,7 @@ class Route extends Controller
 {
     protected $method       = 'index';
     protected $param        = [];
-    protected $controller   = 'Penjualan';
+    protected $controller   = 'Base'; // Default to Error controller if no path provided
 
     public function __construct()
     {
@@ -17,8 +17,10 @@ class Route extends Controller
         if (file_exists('app/Controllers/' . $url[0] . '.php')) {
             $this->controller = $url[0];
         } else {
-            header("Location: " . URL::BASE_URL . "E/e/404");
-            exit();
+            require_once 'app/Controllers/Base.php';
+            $this->controller = new Base();
+            $this->controller->index(); 
+            return;
         }
 
         require_once 'app/Controllers/' . $this->controller . '.php';
@@ -35,7 +37,7 @@ class Route extends Controller
         unset($url[1]);
         $this->param = $url;
 
-        //PANGGIL CLASS(yg sudah di panggil init/core beserta fungsi dan parameter)
+        //PANGGIL CLASS
         call_user_func_array([$this->controller, $this->method], $this->param);
     }
 }

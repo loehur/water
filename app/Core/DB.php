@@ -3,16 +3,30 @@ require_once 'app/Config/DBC.php';
 
 class DB extends DBC
 {
-    private static $_instance = [0 => null];
+    private static $_instance = [];
     private $mysqli;
-    private $db_name, $db_user, $db_pass;
+    private $query_result;
+    
+    // Query Builder Props
+    private $qb_table = "";
+    private $qb_where = [];
+    private $qb_params = [];
+    private $qb_types = ""; // s, i, d, b
 
     public function __construct($db = 0)
     {
-        $this->db_name = DBC::dbm[$db]['db'];
-        $this->db_user = DBC::dbm[$db]['user'];
-        $this->db_pass = DBC::dbm[$db]['pass'];
-        $this->mysqli = new mysqli(DBC::db_host, $this->db_user, $this->db_pass, $this->db_name) or die('DB Error');
+        // Simple singleton logic for connections could be here or handled by getInstance
+        $db_name = DBC::dbm[$db]['db'];
+        $db_user = DBC::dbm[$db]['user'];
+        $db_pass = DBC::dbm[$db]['pass'];
+        
+        $this->mysqli = new mysqli(DBC::db_host, $db_user, $db_pass, $db_name);
+        
+        if ($this->mysqli->connect_error) {
+            die('Connect Error (' . $this->mysqli->connect_errno . ') ' . $this->mysqli->connect_error);
+        }
+        
+        $this->mysqli->set_charset("utf8mb4");
     }
 
     public static function getInstance($db = 0)
@@ -20,354 +34,246 @@ class DB extends DBC
         if (!isset(self::$_instance[$db])) {
             self::$_instance[$db] = new DB($db);
         }
-
         return self::$_instance[$db];
     }
-
-    public function get($table, $index, $group)
+    
+    /**
+     * Raw Query with Optional Params (Prepared Statement)
+     * Usage: $this->db()->query("SELECT * FROM table WHERE id = ?", [1]);
+     */
+    public function query($sql, $params = [])
     {
-        $reply = [];
-        $query = "SELECT * FROM $table";
-        $result = $this->mysqli->query($query);
-
-        if ($result) {
-            $no = 0;
-            while ($row = $result->fetch_assoc())
-                if ($index == "") {
-                    $reply[] = $row;
-                } else {
-                    if ($group == 0) {
-                        $reply[$row[$index]] = $row;
-                    } else {
-                        $no += 1;
-                        $reply[$row[$index]][$no] = $row;
-                    }
-                }
+        $this->reset_qb(); // Clear builder state on raw query
+        
+        $stmt = $this->mysqli->prepare($sql);
+        
+        if (!$stmt) {
+             throw new Exception("Prepare failed: " . $this->mysqli->error);
         }
 
-        return $reply;
-    }
-
-    public function get_where($table, $where, $index, $group)
-    {
-        $reply = [];
-        $query = "SELECT * FROM $table WHERE $where";
-        $result = $this->mysqli->query($query);
-
-        if ($result) {
-            $no = 0;
-            while ($row = $result->fetch_assoc())
-                if ($index == "") {
-                    $reply[] = $row;
-                } else {
-                    if ($group == 0) {
-                        $reply[$row[$index]] = $row;
-                    } else {
-                        $no += 1;
-                        $reply[$row[$index]][$no] = $row;
-                    }
-                }
+        if (!empty($params)) {
+             $types = "";
+             forEach($params as $param) {
+                 if (is_int($param)) $types .= "i";
+                 elseif (is_float($param)) $types .= "d";
+                 else $types .= "s";
+             }
+             $stmt->bind_param($types, ...$params);
         }
-
-        return $reply;
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Execute failed: " . $stmt->error);
+        }
+        
+        $this->query_result = $stmt->get_result();
+        // If query was INSERT/UPDATE/DELETE, get_result returns false, which is fine
+        // We can capture affected_rows or insert_id here if needed but for now we focus on SELECT compatibility
+        
+        return $this; // Return self for chaining result methods
     }
+    
+    // --- Query Builder Methods ---
 
-    public function get_cols($table, $cols, $row = 1, $index = "")
+    /**
+     * Get Where
+     * Usage: get_where('table', ['id' => 1])
+     */
+    public function get_where($table, $where = [], $limit = null)
     {
-        $reply = [];
-        $query = "SELECT $cols FROM $table";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            switch ($row) {
-                case "0":
-                    $reply = $result->fetch_assoc();
-                case "1";
-                    while ($row = $result->fetch_assoc())
-                        if ($index == "")
-                            $reply[] = $row;
-                        else
-                            $reply[$row[$index]] = $row;
-                    break;
+        $this->reset_qb();
+        $this->qb_table = $table;
+        
+        $sql = "SELECT * FROM " . $table;
+        $params = [];
+        $types = "";
+
+        if (!empty($where)) {
+            $clauses = [];
+            foreach ($where as $key => $val) {
+                // Determine operator
+                $op = "=";
+                // Basic support for "key !=" => val syntax could be added, but keeping simple for now: "key" => val
+                
+                $clauses[] = "$key = ?";
+                $params[] = $val;
+                
+                if (is_int($val)) $types .= "i";
+                elseif (is_float($val)) $types .= "d";
+                else $types .= "s";
             }
+            $sql .= " WHERE " . implode(" AND ", $clauses);
+        }
 
-            if (is_array($reply)) {
-                return $reply;
-            } else {
-                return [];
+        if ($limit) {
+            $sql .= " LIMIT ?";
+            $params[] = $limit;
+            $types .= "i";
+        }
+        
+        $stmt = $this->mysqli->prepare($sql);
+        if (!$stmt) throw new Exception("DB Error: " . $this->mysqli->error);
+        
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        
+        $stmt->execute();
+        $this->query_result = $stmt->get_result();
+        
+        return $this;
+    }
+
+    /**
+     * Insert
+     * Usage: insert('table', ['col' => 'val'])
+     */
+    public function insert($table, $data)
+    {
+        // $data must be associative array
+        $cols = array_keys($data);
+        $vals = array_values($data);
+        
+        $placeholders = array_fill(0, count($cols), "?");
+        
+        $sql = "INSERT INTO $table (" . implode(", ", $cols) . ") VALUES (" . implode(", ", $placeholders) . ")";
+        
+        $types = "";
+        foreach ($vals as $val) {
+             if (is_int($val)) $types .= "i";
+             elseif (is_float($val)) $types .= "d";
+             else $types .= "s";
+        }
+        
+        $stmt = $this->mysqli->prepare($sql);
+        if (!$stmt) return false;
+        
+        $stmt->bind_param($types, ...$vals);
+        
+        if ($stmt->execute()) {
+            return $this->mysqli->insert_id;
+        } else {
+            return false;
+        }
+    }
+    
+     /**
+     * Update
+     * Usage: update('table', ['col' => 'newval'], ['id' => 1])
+     */
+    public function update($table, $data, $where)
+    {
+        $set_clauses = [];
+        $params = [];
+        $types = "";
+        
+        foreach ($data as $key => $val) {
+            $set_clauses[] = "$key = ?";
+            $params[] = $val;
+            if (is_int($val)) $types .= "i";
+             elseif (is_float($val)) $types .= "d";
+             else $types .= "s";
+        }
+        
+        // Where clauses
+        $where_clauses = [];
+        foreach ($where as $key => $val) {
+            $where_clauses[] = "$key = ?";
+            $params[] = $val;
+             if (is_int($val)) $types .= "i";
+             elseif (is_float($val)) $types .= "d";
+             else $types .= "s";
+        }
+        
+        $sql = "UPDATE $table SET " . implode(", ", $set_clauses) . " WHERE " . implode(" AND ", $where_clauses);
+        
+        $stmt = $this->mysqli->prepare($sql);
+        if (!$stmt) return false;
+        
+        $stmt->bind_param($types, ...$params);
+        
+        return $stmt->execute();
+    }
+    
+    /**
+     * Delete
+     * Usage: delete('table', ['id' => 1])
+     */
+    public function delete($table, $where)
+    {
+        $where_clauses = [];
+        $params = [];
+        $types = "";
+        
+        foreach ($where as $key => $val) {
+            $where_clauses[] = "$key = ?";
+            $params[] = $val;
+             if (is_int($val)) $types .= "i";
+             elseif (is_float($val)) $types .= "d";
+             else $types .= "s";
+        }
+        
+        $sql = "DELETE FROM $table WHERE " . implode(" AND ", $where_clauses);
+        
+        $stmt = $this->mysqli->prepare($sql);
+        if (!$stmt) return false;
+        
+        $stmt->bind_param($types, ...$params);
+        
+        return $stmt->execute();
+    }
+
+    // --- Result Methods (Fluent) ---
+
+    public function row()
+    {
+        if ($this->query_result) {
+            return $this->query_result->fetch_object();
+        }
+        return null;
+    }
+    
+    public function row_array()
+    {
+        if ($this->query_result) {
+            return $this->query_result->fetch_assoc();
+        }
+        return null;
+    }
+
+    public function result()
+    {
+        $rows = [];
+        if ($this->query_result) {
+            while ($row = $this->query_result->fetch_object()) {
+                $rows[] = $row;
             }
-        } else {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
         }
+        return $rows;
     }
-
-    public function get_cols_where($table, $cols, $where, $row = 1, $index = "")
+    
+    public function result_array()
     {
-        $reply = [];
-        $query = "SELECT $cols FROM $table WHERE $where";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            switch ($row) {
-                case "0":
-                    $reply = $result->fetch_assoc();
-                case "1";
-                    while ($row = $result->fetch_assoc())
-                        if ($index == "")
-                            $reply[] = $row;
-                        else
-                            $reply[$row[$index]] = $row;
-                    break;
+        $rows = [];
+        if ($this->query_result) {
+            while ($row = $this->query_result->fetch_assoc()) {
+                $rows[] = $row;
             }
-
-            if (is_array($reply)) {
-                return $reply;
-            } else {
-                return [];
-            }
-        } else {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
         }
+        return $rows;
     }
-
-    public function get_cols_groubBy($table, $cols, $groupBy)
+    
+    // Internal Helper
+    private function reset_qb()
     {
-        $reply = [];
-        $query = "SELECT $cols FROM $table GROUP BY $groupBy";
-        $result = $this->mysqli->query($query);
-
-        while ($row = $result->fetch_assoc())
-            $reply[] = $row;
-
-        return $reply;
+        $this->qb_table = "";
+        $this->qb_where = [];
+        $this->qb_params = [];
+        $this->qb_types = "";
+        $this->query_result = null;
     }
-
-    public function get_order($table, $order)
-    {
-        $reply = [];
-        $query = "SELECT * FROM $table ORDER BY $order";
-        $result = $this->mysqli->query($query);
-
-        while ($row = $result->fetch_assoc())
-            $reply[] = $row;
-
-        return $reply;
-    }
-
-
-    public function get_where_order($table, $where, $order)
-    {
-        $reply = [];
-        $query = "SELECT * FROM $table WHERE $where ORDER BY $order";
-        $result = $this->mysqli->query($query);
-
-        while ($row = $result->fetch_assoc())
-            $reply[] = $row;
-
-        return $reply;
-    }
-
-    public function get_where_row($table, $where)
-    {
-        $reply = [];
-        $query = "SELECT * FROM $table WHERE $where";
-        $result = $this->mysqli->query($query);
-        $reply = $result->fetch_assoc();
-        if ($result) {
-            if (is_array($reply)) {
-                return $reply;
-            } else {
-                return [];
-            }
-        } else {
-            return [];
-        }
-    }
-
-    public function insert($table, $values, $update = "")
-    {
-        if ($update == "") {
-            $query = "INSERT INTO $table VALUES($values)";
-        } else {
-            $query = "INSERT INTO $table VALUES($values) ON DUPLICATE KEY UPDATE $update;";
-        }
-
-        try {
-            $this->mysqli->query($query);
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-        } catch (\Throwable $th) {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-        }
-    }
-
-    public function insertCols($table, $columns, $values, $update = "")
-    {
-
-        if ($update == "") {
-            $query = "INSERT INTO $table($columns) VALUES($values)";
-        } else {
-            $query = "INSERT INTO $table($columns) VALUES($values) ON DUPLICATE KEY UPDATE $update";
-        }
-
-        try {
-            $this->mysqli->query($query);
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-        } catch (\Throwable $th) {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-        }
-    }
-
-    public function delete_where($table, $where)
-    {
-        $query = "DELETE FROM $table WHERE $where";
-        $this->mysqli->query($query);
-        return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-    }
-
-    public function update($table, $set, $where)
-    {
-        $query = "UPDATE $table SET $set WHERE $where";
-        try {
-            $this->mysqli->query($query);
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno, 'db' => $this->db_name);
-        } catch (\Throwable $th) {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno, 'db' => $this->db_name);
-        }
-    }
-
-    public function count($table)
-    {
-        $query = "SELECT COUNT(*) FROM $table";
-        $result = $this->mysqli->query($query);
-
-        $reply = $result->fetch_array();
-        if ($reply) {
-            return $reply[0];
-        } else {
-            return array('query' => $query, 'info' => $this->mysqli->error);
-        }
-    }
-
-    public function count_where($table, $where)
-    {
-        $query = "SELECT COUNT(*) FROM $table WHERE $where";
-        $result = $this->mysqli->query($query);
-
-        $reply = $result->fetch_array();
-        if ($reply) {
-            return $reply[0];
-        } else {
-            return array('query' => $query, 'info' => $this->mysqli->error);
-        }
-    }
-
-    public function count_distinct_where($table, $distinct, $where)
-    {
-        $query =  "SELECT COUNT(DISTINCT $distinct) as count FROM $table WHERE $where";
-        $result = $this->mysqli->query($query);
-
-        $reply = $result->fetch_array();
-        if ($reply) {
-            return $reply['count'];
-        } else {
-            return array('query' => $query, 'info' => $this->mysqli->error);
-        }
-    }
-
-    public function query($query)
-    {
-        $query = $this->mysqli->query($query);
-        try {
-            $this->mysqli->query($query);
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-        } catch (\Throwable $th) {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno);
-        }
-    }
-
-    public function innerJoin1($table, $tb_join, $join_where)
-    {
-        $query = "SELECT * FROM $table INNER JOIN $tb_join ON $join_where";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            $reply = [];
-            while ($row = $result->fetch_assoc())
-                $reply[] = $row;
-            return $reply;
-        } else {
-            return FALSE;
-        }
-    }
-
-    public function innerJoin2($table, $tb_join1, $join_where1, $tb_join2, $join_where2)
-    {
-        $query = "SELECT * FROM $table INNER JOIN $tb_join1 ON $join_where1 INNER JOIN $tb_join2 ON $join_where2";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            $reply = [];
-            while ($row = $result->fetch_assoc())
-                $reply[] = $row;
-            return $reply;
-        } else {
-            return FALSE;
-        }
-    }
-
-    public function innerJoin2_where($table, $tb_join1, $join_where1, $tb_join2, $join_where2, $where)
-    {
-        $query = "SELECT * FROM $table INNER JOIN $tb_join1 ON $join_where1 INNER JOIN $tb_join2 ON $join_where2 WHERE $where";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            $reply = [];
-            while ($row = $result->fetch_assoc())
-                $reply[] = $row;
-            return $reply;
-        } else {
-            return FALSE;
-        }
-    }
-
-    public function innerJoin1_where($table, $tb_join, $join_where, $where)
-    {
-        $query = "SELECT * FROM $table INNER JOIN $tb_join ON $join_where WHERE $where";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            $reply = [];
-            while ($row = $result->fetch_assoc())
-                $reply[] = $row;
-            return $reply;
-        } else {
-            return FALSE;
-        }
-    }
-    public function innerJoin1_orderBy($table, $tb_join, $join_where, $orderBy)
-    {
-        $query = "SELECT * FROM $table INNER JOIN $tb_join ON $join_where ORDER BY $orderBy";
-        $result = $this->mysqli->query($query);
-        if ($result) {
-            $reply = [];
-            while ($row = $result->fetch_assoc())
-                $reply[] = $row;
-            return $reply;
-        } else {
-            return FALSE;
-        }
-    }
-
-    //============================================
-
-    public function sum_col_where($table, $col, $where)
-    {
-        $query = "SELECT SUM($col) as Total FROM $table WHERE $where";
-        $result = $this->mysqli->query($query);
-
-        $reply = $result->fetch_assoc();
-        if ($result) {
-            if ($reply["Total"] == '') {
-                $reply["Total"] = 0;
-            }
-
-            return $reply["Total"];
-        } else {
-            return array('query' => $query, 'error' => $this->mysqli->error, 'errno' => $this->mysqli->errno, 'db' => $this->db_name);
-        }
+    
+    // Helper to get raw connection if needed
+    public function conn() {
+        return $this->mysqli;
     }
 }

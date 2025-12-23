@@ -90,7 +90,7 @@ class WA_YCloud extends DB
             'code' => $httpCode,
             'forward' => !$status, 
             'error' => $msg,
-            'data' => $decoded
+            'data' => (is_array($decoded) ? $decoded : []) + ['id' => '', 'status' => '']
         ];
     }
 }

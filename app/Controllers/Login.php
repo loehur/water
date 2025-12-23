@@ -195,54 +195,17 @@ class Login extends Controller
       if (isset($cek['otp_active'])) {
          $id_cabang = $cek['id_cabang'];
          if ($cek['otp_active'] == $today) {
-            $cek_deliver = $this->data('Notif')->cek_deliver($hp_input, $today, $id_cabang);
-            if (isset($cek_deliver['text'])) {
-               $hp = $cek['no_user'];
-               $text = $cek_deliver['text'];
-
-               $res = $this->model(URL::WA_API[0])->send($hp, $text, URL::WA_TOKEN[0]);
-               if ($res['forward']) {
-                  //ALTERNATIF WHATSAPP
-                  $res = $this->model(URL::WA_API[1])->send($hp, $text, URL::WA_TOKEN[1]);
-               }
-
-               if ($res['status']) {
-                  $up = $this->db(date('Y'))->update('notif', "id_api_2 =  '" . $res['data']['id'] . "'", "id_notif = " . $cek_deliver['id_notif']);
-
-                  if ($up['errno'] == 0) {
-                     $res_f = [
-                        'code' => 1,
-                        'msg' => "PERMINTAAN ULANG PIN BERHASIL, AKTIF 1 HARI"
-                     ];
-                  } else {
-                     $res_f = [
-                        'code' => 0,
-                        'msg' => $up['error']
-                     ];
-                  }
-               } else {
-                  $res_f = [
-                     'code' => 0,
-                     'msg' => print_r($res)
-                  ];
-               }
-            } else {
-               $res_f = [
-                  'code' => 1,
-                  'msg' => "GUNAKAN PIN HARI INI"
-               ];
-            }
+            $res_f = [
+               'code' => 1,
+               'msg' => "GUNAKAN PIN HARI INI"
+            ];
          } else {
             $otp = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
             $otp_enc = $this->model("Enc")->otp($otp);
             $text = $otp . " (" . $cek['nama_user'] . ") - " . URL::APP_SNAME;
             $hp = $cek['no_user'];
 
-            $res = $this->model(URL::WA_API[0])->send($hp, $text, URL::WA_TOKEN[0]);
-            if ($res['forward']) {
-               //ALTERNATIF WHATSAPP
-               $res = $this->model(URL::WA_API[1])->send($hp, $text, URL::WA_TOKEN[1]);
-            }
+            $res = $this->model('WA_YCloud')->send($hp, $text);
 
             if ($res['status']) {
                $do = $this->data('Notif')->insertOTP($res, $today, $hp_input, $text, $id_cabang);

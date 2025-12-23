@@ -236,7 +236,7 @@ class Login extends Controller
                   'msg' => $res['error']
                ];
             }
-         }
+         } //ok
       } else {
          $_SESSION[URL::SESSID]['captcha'] = "HJFASD7FD89AS7FSDHFD68FHF7GYG7G47G7G7G674GRGVFTGB7G6R74GHG3Q789631765YGHJ7RGEYBF67";
          $res_f = [
